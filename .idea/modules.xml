@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cmdb.iml" filepath="$PROJECT_DIR$/.idea/modules/cmdb.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/movieDB.iml" filepath="$PROJECT_DIR$/.idea/modules/movieDB.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/movieDB_main.iml" filepath="$PROJECT_DIR$/.idea/modules/movieDB_main.iml" group="movieDB" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/movieDB_test.iml" filepath="$PROJECT_DIR$/.idea/modules/movieDB_test.iml" group="movieDB" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/movieSiteFinal-movieDB_main.iml" filepath="$PROJECT_DIR$/.idea/modules/movieSiteFinal-movieDB_main.iml" group="movieDB" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/movieSiteFinal-movieDB_test.iml" filepath="$PROJECT_DIR$/.idea/modules/movieSiteFinal-movieDB_test.iml" group="movieDB" />
     </modules>
   </component>
 </project>
