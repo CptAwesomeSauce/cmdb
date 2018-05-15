@@ -15,9 +15,27 @@
 </ul>
 
 <script>
-if (auth != null && 1=1){
+if (req.session().attribute("authenticated"){
     <a href="/write-review">Write a Review</a>
 }
 </script>
 
 {{>footer.hbs}}
+
+
+have a movie-info and
+
+session object is a java object
+
+simple answer: movie-list partialU (any auth'ed user - here adda writeAReview)
+
+
+
+
+if (req)
+show the auth page
+
+on auth page(return pushing data to user side
+
+
+if not auth, psuh it to N side

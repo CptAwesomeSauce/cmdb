@@ -32,6 +32,7 @@ public class ProjectController {
             System.err.println("postLoginForm: " + e.getMessage());
             return "";
         } ///////////////PROBLEM BELOW
+
         return runner.renderTemplate(null, "movie-info.hbs"); //////////////////////////////PROBLEM
     }
 
