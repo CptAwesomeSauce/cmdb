@@ -1,3 +1,4 @@
+import javax.xml.ws.Response;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,8 +21,8 @@ public class DbFacade implements AutoCloseable {
 
     private void openDB() throws SQLException {
         // Connect to the database
-        //String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
-        String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
+        String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
+        //String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
         String username = "yellow_2018";
         String password = "367rocks!";
 
@@ -256,5 +257,41 @@ public class DbFacade implements AutoCloseable {
         ResultSet rset = pstmt.executeQuery();
         
         return true;
+    }
+
+    public ResultSet searchByGenre(String gen){
+
+        ResultSet r = null;
+        //If the genre is other, we want to search for movies that
+        //are all of the genres other than the ones on the homepage
+        if(gen.compareTo("other") == 0){
+            try {
+                String sql = "SELECT * " +
+                        "FROM movie "+
+                        "WHERE LOWER(movie.genre) NOT LIKE '%horror%' " +
+                        "AND LOWER(movie.genre) NOT LIKE '%comedy%' " +
+                        "AND LOWER(movie.genre) NOT LIKE '%romance%' " +
+                        "AND LOWER(movie.genre) NOT LIKE '%action%' ";
+                Statement stmt = conn.createStatement();
+                r = stmt.executeQuery(sql);
+            } catch (SQLException e) {
+                System.out.println("Report Views failed: " + e.getMessage());
+            }
+            return r;
+        }
+
+        try {
+            String sql = "SELECT * " +
+                    "FROM movie "+
+                    "WHERE LOWER(movie.genre) LIKE LOWER(?) ";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.clearParameters();
+            pstmt.setString(1, "%"+gen+"%");
+            r = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println("Report Views failed: " + e.getMessage());
+        }
+        return r;
+
     }
 }

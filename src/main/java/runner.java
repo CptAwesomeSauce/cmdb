@@ -23,10 +23,13 @@ public class runner {
         get("/movie-list", controller::getMovieList);
         get("/movie-info", controller::getMovieInfo);
 
+        get("movie-by-genre", controller::getMovieListGenre);
+
         get("/movie-info/:ISN", controller::getMovies);
         get("/newuser", controller::createNewUser);
         get("/user/userhome", controller::getUserHome);
         get("/mod/modhome", controller::getModHome);
+
         get("/admin/adminhome", controller::getAdminHome);
 
             //db.addMovie("Animal House", "0000000000001", "Comedy", "R", "English", new Time(90 * 60 * 1000), 1978);
