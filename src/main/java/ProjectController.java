@@ -16,7 +16,7 @@ public class ProjectController {
         try (DbFacade db = new DbFacade()){
             ResultSet rset = db.getMovieInfo(req.params(":title"));
 
-            ArrayList<Map<String,String>> mov = new ArrayList<>();
+            ArrayList<Map<String,String>> movies = new ArrayList<>();
             while(rset.next()){
                 Map<String,String> row = new HashMap<>();
                 row.put("title", rset.getString(1));
@@ -26,14 +26,22 @@ public class ProjectController {
                 row.put("language", rset.getString(5));
                 row.put("length", rset.getString(6));
                 row.put("date", rset.getString(7));
+                movies.add(row);
+            }
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("employees", movies);
+            if(req.session().attribute("authenticated")){
+                return runner.renderTemplate(data, "movie-infoU.hbs");
+            }else {
+                return runner.renderTemplate(data, "movie-infoN.hbs");
             }
         } catch(SQLException e) {
             resp.status(500);
             System.err.println("postLoginForm: " + e.getMessage());
             return "";
         } ///////////////PROBLEM BELOW
-
-        return runner.renderTemplate(null, "movie-info.hbs"); //////////////////////////////PROBLEM
+         //////////////////////////////PROBLEM
     }
 
 
