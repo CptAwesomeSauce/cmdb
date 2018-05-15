@@ -4,6 +4,8 @@
     <bytecodeTargetLevel>
       <module name="movieDB_main" target="1.8" />
       <module name="movieDB_test" target="1.8" />
+      <module name="movieSiteFinal-movieDB_main" target="1.8" />
+      <module name="movieSiteFinal-movieDB_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

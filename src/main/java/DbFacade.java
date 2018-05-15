@@ -20,8 +20,8 @@ public class DbFacade implements AutoCloseable {
 
     private void openDB() throws SQLException {
         // Connect to the database
-        //url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
-        String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
+        String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
+        //String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
         String username = "yellow_2018";
         String password = "367rocks!";
 
@@ -41,6 +41,17 @@ public class DbFacade implements AutoCloseable {
             System.err.println("Failed to close database connection: " + e);
         }
         conn = null;
+    }
+
+    //get info about a movie
+    public ResultSet getMovieInfo(String titel) throws SQLException {
+        String sql="SELECT title, ISAN_ID, genre, MPAA_Rating, language, length, date" +
+                "FROM movie" +
+                "WHERE title LIKE '%' + ? + '%'";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, titel);
+        return pstmt.executeQuery();
     }
 
     //add new review to table
