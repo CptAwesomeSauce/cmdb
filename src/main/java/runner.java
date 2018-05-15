@@ -16,12 +16,14 @@ public class runner {
         DbFacade db = new DbFacade();
         ProjectController controller = new ProjectController();
 
-        Spark.get("/homepage", controller::displayHome);
+        get("/homepage", controller::displayHome);
 
         post( "/authenticate", controller::postLoginForm);
         post( "/deauthenticate", controller::releaseLogin);
-        post("/movie-info", controller::displayGenrePost);
-        post("/movie-info", controller::getMovies);
+        get("/movie-list", controller::getMovieList);
+        get("/movie-info", controller::getMovieInfo);
+
+        get("/movie-info/:ISN", controller::getMovies);
         get("/newuser", controller::createNewUser);
         get("/user/userhome", controller::getUserHome);
         get("/mod/modhome", controller::getModHome);

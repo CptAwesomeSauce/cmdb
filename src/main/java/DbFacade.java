@@ -20,8 +20,8 @@ public class DbFacade implements AutoCloseable {
 
     private void openDB() throws SQLException {
         // Connect to the database
-        String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
-        //String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
+        //String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
+        String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
         String username = "yellow_2018";
         String password = "367rocks!";
 
@@ -44,13 +44,23 @@ public class DbFacade implements AutoCloseable {
     }
 
     //get info about a movie
-    public ResultSet getMovieInfo(String titel) throws SQLException {
-        String sql="SELECT title, ISAN_ID, genre, MPAA_Rating, language, length, date" +
-                "FROM movie" +
-                "WHERE title LIKE '%' + ? + '%'";
+    public ResultSet getMovieInfo(String ISAN) throws SQLException {
+        String sql="SELECT title, ISAN_ID, genre, MPAA_Rating, language, length, date " +
+                "FROM movie " +
+                "WHERE ISAN_ID = ?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.clearParameters();
-        pstmt.setString(1, titel);
+        pstmt.setString(1, ISAN);
+        return pstmt.executeQuery();
+    }
+
+    public ResultSet getMovieISN(String tit) throws SQLException {
+        String sql="SELECT title , ISAN_ID FROM movie " +
+                "WHERE title LIKE ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, "%"+tit+"%");
+
         return pstmt.executeQuery();
     }
 
