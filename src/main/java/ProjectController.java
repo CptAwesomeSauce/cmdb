@@ -30,7 +30,7 @@ public class ProjectController {
             }
 
             Map<String, Object> data = new HashMap<>();
-            data.put("employees", movies);
+            data.put("movie", movies);
             try {
                 if (req.session().attribute("authenticated")) {
                     return runner.renderTemplate(data, "movie-infoU.hbs");
