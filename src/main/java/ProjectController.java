@@ -2,13 +2,39 @@ import spark.Request;
 import spark.Response;
 import spark.Session;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static spark.Spark.halt;
 
 public class ProjectController {
+
+    public Object getMovies(Request req, Response resp) throws SQLException{
+        try (DbFacade db = new DbFacade()){
+            ResultSet rset = db.getMovieInfo(req.params(":title"));
+
+            ArrayList<Map<String,String>> mov = new ArrayList<>();
+            while(rset.next()){
+                Map<String,String> row = new HashMap<>();
+                row.put("title", rset.getString(1));
+                row.put("ISAN_ID", rset.getString(2));
+                row.put("genre", rset.getString(3));
+                row.put("MPAA_Rating", rset.getString(4));
+                row.put("language", rset.getString(5));
+                row.put("length", rset.getString(6));
+                row.put("date", rset.getString(7));
+            }
+        } catch(SQLException e) {
+            resp.status(500);
+            System.err.println("postLoginForm: " + e.getMessage());
+            return "";
+        } ///////////////PROBLEM BELOW
+        return runner.renderTemplate(null, "movie-info.hbs"); //////////////////////////////PROBLEM
+    }
+
 
     public Object displayHome(Request req, Response resp){
             return runner.renderTemplate(null, "homepage.hbs");
@@ -65,7 +91,9 @@ public class ProjectController {
         //to another page where they can enter another genre.
         if (genreIn.compareTo("other") == 0)
             return runner.renderTemplate(null, "otherGenreForm.hbs");
+        else{
 
+        }
         //else display steven's page with the list of movies that match
         return null;
     }
@@ -115,13 +143,16 @@ public class ProjectController {
 
         if (pwd1.equals(pwd2)) {
             try (DbFacade db = new DbFacade()) {
-                Boolean result = db.createNewUser(fname, lname, uID, pwd1);
+
+                if(db.checkUserName(uID)) {
+                    Boolean result = db.createNewUser(fname, lname, uID, pwd1);
+                }
                 Map<String,Object> data = new HashMap<>();
                 data.put("msg", "success");
                 return runner.renderTemplate(data, "homepage.hbs");
             } catch (SQLException ex) {
                 Map<String,Object> data = new HashMap<>();
-                data.put("msg", "Login failed!");
+                data.put("msg", "Create failed!");
                 return runner.renderTemplate(data, "homepage.hbs");
             }
         }else{

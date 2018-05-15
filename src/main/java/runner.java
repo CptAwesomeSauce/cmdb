@@ -20,7 +20,8 @@ public class runner {
 
         post( "/authenticate", controller::postLoginForm);
         post( "/deauthenticate", controller::releaseLogin);
-        post("/post-stevensPage", controller::displayGenrePost);
+        post("/movie-info", controller::displayGenrePost);
+        post("/movie-info", controller::getMovies);
         get("/newuser", controller::createNewUser);
         get("/user/userhome", controller::getUserHome);
         get("/mod/modhome", controller::getModHome);
