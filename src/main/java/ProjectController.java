@@ -91,7 +91,9 @@ public class ProjectController {
         //to another page where they can enter another genre.
         if (genreIn.compareTo("other") == 0)
             return runner.renderTemplate(null, "otherGenreForm.hbs");
+        else{
 
+        }
         //else display steven's page with the list of movies that match
         return null;
     }
