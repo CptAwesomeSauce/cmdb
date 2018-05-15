@@ -1,0 +1,19 @@
+
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+mainClassName = "runner"
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'com.sparkjava:spark-core:2.7.2'
+    compile 'com.sparkjava:spark-template-handlebars:2.7.1'
+    compile 'org.slf4j:slf4j-simple:1.7.21'
+    compile 'org.mariadb.jdbc:mariadb-java-client:2.2.3'
+    testCompile 'junit:junit:4.12'
+}

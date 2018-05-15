@@ -1,0 +1,38 @@
+{{>header.hbs}}
+<h2>User Home</h2>
+<form action="/deauthenticate" method="post">
+    <p><button type="submit">Log out</button></p>
+
+</form>
+
+<form action="/post-stevensPage" method="post">
+
+    <p>Search for a movie:</p>
+    <label for="title">Title:</label>
+    <input type="text" id = "title" name="title_field"> <br>
+
+    <p>Genre:
+        <input type="radio" name="genre_field" value="horror"> Horror
+        <input type="radio" name="genre_field" value="comedy"> Comedy
+        <input type="radio" name="genre_field" value="romance"> Romance
+        <input type="radio" name="genre_field" value="action"> Action
+        <input type="radio" name="genre_field" value="other"> Other
+
+    </p>
+
+    <p><button type="submit">Search</button></p>
+
+</form>
+
+<ol>
+    <li><a href="/addReviewForm"> Add a review </a></li>
+    <li><a href="/addMovieForm"> Add a movie </a></li>
+    <li><a href="/viewCountForm"> Check a movie's view count</a></li>
+    <li><a href="/editReviewForm"> Edit review </a></li>
+    <li><a href="/reportMovieInfoForm"> Search movies </a></li>
+    <li><a href="/reportUserReviews"> View users' reviews </a></li>
+</ol>
+
+
+
+{{>footer.hbs}}
