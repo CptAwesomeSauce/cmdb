@@ -42,12 +42,12 @@ public class DbFacade implements AutoCloseable {
         }
         conn = null;
     }
-
+//get a list of keys with a title passed in
     //get info about a movie
     public ResultSet getMovieInfo(String titel) throws SQLException {
         String sql="SELECT title, ISAN_ID, genre, MPAA_Rating, language, length, date" +
                 "FROM movie" +
-                "WHERE title LIKE '%' + ? + '%'";
+                "WHERE title LIKE '%'+title+''%' + ? + '%'";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.clearParameters();
         pstmt.setString(1, titel);
