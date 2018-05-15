@@ -143,13 +143,16 @@ public class ProjectController {
 
         if (pwd1.equals(pwd2)) {
             try (DbFacade db = new DbFacade()) {
-                Boolean result = db.createNewUser(fname, lname, uID, pwd1);
+
+                if(db.checkUserName(uID)) {
+                    Boolean result = db.createNewUser(fname, lname, uID, pwd1);
+                }
                 Map<String,Object> data = new HashMap<>();
                 data.put("msg", "success");
                 return runner.renderTemplate(data, "homepage.hbs");
             } catch (SQLException ex) {
                 Map<String,Object> data = new HashMap<>();
-                data.put("msg", "Login failed!");
+                data.put("msg", "Create failed!");
                 return runner.renderTemplate(data, "homepage.hbs");
             }
         }else{

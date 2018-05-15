@@ -215,7 +215,36 @@ public class DbFacade implements AutoCloseable {
         }
     }
 
-    public Boolean createNewUser(String fname, String lname, String id, String pwd){
+    public Boolean checkUserName(String uID)throws SQLException{
+        String sql = "SELECT COUNT(*) AS rowcount FROM user WHERE " +
+                " user_ID = ? ";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, uID);
+
+        ResultSet rset = pstmt.executeQuery();
+        rset.next();
+        if(rset.getInt("rowcount") == 0){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public Boolean createNewUser(String fname, String lname, String id, String pwd)throws SQLException{
+        String sql = "INSERT INTO user (fname,lname,user_ID,password,user_type,blocked)" +
+                "VALUES(?,?,?,?,?,?)";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, fname);
+        pstmt.setString(2, lname);
+        pstmt.setString(3, id);
+        pstmt.setString(4, pwd);
+        pstmt.setString(5, "1");
+        pstmt.setString(6, "0");
+
+        ResultSet rset = pstmt.executeQuery();
+        
         return true;
     }
 }
