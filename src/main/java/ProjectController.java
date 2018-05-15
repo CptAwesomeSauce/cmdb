@@ -14,7 +14,7 @@ public class ProjectController {
 
     public Object getMovies(Request req, Response resp) throws SQLException{
         try (DbFacade db = new DbFacade()){
-            ResultSet rset = db.getMovieInfo(req.params(":title"));
+            ResultSet rset = db.getMovieInfo(req.params(":ISN"));
 
             ArrayList<Map<String,String>> movies = new ArrayList<>();
             while(rset.next()){
@@ -31,17 +31,20 @@ public class ProjectController {
 
             Map<String, Object> data = new HashMap<>();
             data.put("employees", movies);
-            if(req.session().attribute("authenticated")){
-                return runner.renderTemplate(data, "movie-infoU.hbs");
-            }else {
+            try {
+                if (req.session().attribute("authenticated")) {
+                    return runner.renderTemplate(data, "movie-infoU.hbs");
+                } else {
+                    return runner.renderTemplate(data, "movie-infoN.hbs");
+                }
+            }catch(NullPointerException ex){
                 return runner.renderTemplate(data, "movie-infoN.hbs");
             }
         } catch(SQLException e) {
             resp.status(500);
             System.err.println("postLoginForm: " + e.getMessage());
             return "";
-        } ///////////////PROBLEM BELOW
-         //////////////////////////////PROBLEM
+        }
     }
 
 
@@ -61,6 +64,27 @@ public class ProjectController {
         return runner.renderTemplate(null, "admin-home.hbs");
     }
 
+    public Object getMovieInfo(Request req, Response resp) { return runner.renderTemplate(null, "movie-item.hbs"); }
+    public Object getMovieList(Request req, Response resp) {
+        String title = req.queryParams("title_field");
+        try(DbFacade db = new DbFacade()) {
+            ResultSet rset = db.getMovieISN(title);
+            ArrayList<Map<String,String>> movies = new ArrayList<>();
+            while(rset.next()) {
+                Map<String,String> row = new HashMap<>();
+                row.put("title", rset.getString(1));
+                row.put("ISAN_ID", rset.getString(2));
+                movies.add(row);
+            }
+            Map<String,Object> data = new HashMap<>();
+            data.put("movies",movies);
+            return runner.renderTemplate(data,"movie-list-partial.hbs");
+        }catch(SQLException e) {
+            resp.status(500);
+            System.err.println("getMovieList: " + e.getMessage());
+            return "";
+        }
+    }
     public Object postLoginForm(Request req, Response resp) {
         String uname = req.queryParams("login_field");
         String pwd = req.queryParams("pword_field");
