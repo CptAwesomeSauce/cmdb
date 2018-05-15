@@ -2,12 +2,8 @@
 <ul>
     {{#review}}
         <ul>
-            <li>ISAN ID: {{isanID}}</li>
-            <li>Time: {{param}}</li>
-            <li>USER ID: {{userID}}</li>
             <li>Rating: {{rating}}</li>
-            <li>Review: {{"SELECT * FROM REVIEW WHERE movieTitle = ?"}}</li>
-            <li>Comments: {{comments}}</li>
+            <li>Review: {{review}}</li>
             <br>
         </ul>
     {{/review}}
