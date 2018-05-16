@@ -343,4 +343,21 @@ public class DbFacade implements AutoCloseable {
 
     }
 
+    public Boolean deleteReview(String uID, String isan, int status) throws SQLException{
+        String sql = null;
+        ResultSet rset = null;
+        sql = "DELETE FROM review " +
+                "WHERE User_ID = ? AND isanID = ? AND reviewed = ? ";
+
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, uID);
+        pstmt.setString(2, isan);
+        pstmt.setInt(3,status);
+
+        if(pstmt.executeUpdate() > 0)
+            return true;
+        return false;
+    }
+
 }

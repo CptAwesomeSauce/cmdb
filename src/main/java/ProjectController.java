@@ -298,34 +298,49 @@ public class ProjectController {
     }
 
     public Object approveReview(Request req, Response resp){
-        String val = req.queryParams("approval_field");
-        System.out.println(val);
-        int statusIn = val.charAt(0);
+        String approved = req.queryParams("approval_field");
+        String ID = req.queryParams("userID_field");
+        String isan = req.queryParams("isanID_field");
+
+        if(Integer.parseInt(approved) == 0){
+            try(DbFacade db = new DbFacade()){
+                Boolean deleted = false;
+                deleted = db.deleteReview(ID, isan, Integer.parseInt(approved));
+
+                if(deleted)
+                    return runner.renderTemplate(null, "modReviewDel.hbs");
 
 
 
+            }catch(SQLException e){
+                resp.status(500);
+                System.err.println("approveReviewDelete: " + e.getMessage());
+                return "";
+            }
 
-//        try(DbFacade db = new DbFacade()){
-//            Boolean updated;
-//            updated = db.updateReviewStatus();
-//
-//            if(updated)
-//                return runner.renderTemplate(null, "modReviewSuc.hbs");
-//
-//
-//        }catch (SQLException e){
-//            resp.status(500);
-//            System.err.println("approveReview: " + e.getMessage());
-//            return "";
-//        }
-//
-//        Map<String,Object> data = new HashMap<>();
-//        data.put("ErrorMsg", "Failed, review unchaged.");
-//        return runner.renderTemplate(data, "modReviewPage.hbs");
-
-        return null;
+            Map<String,Object> data = new HashMap<>();
+            data.put("ErrorMsg", "Failed, review unchanged.");
+            return runner.renderTemplate(data, "modReviewPage.hbs");
+        }
 
 
+        try(DbFacade db = new DbFacade()){
+            Boolean updated;
+            updated = db.updateReviewStatus(ID, isan, Integer.parseInt(approved));
+
+            if(updated)
+                return runner.renderTemplate(null, "modReviewSuc.hbs");
+
+
+        }catch (SQLException e){
+            resp.status(500);
+            System.err.println("approveReviewApprove: " + e.getMessage());
+            return "";
+        }
+
+        Map<String,Object> data = new HashMap<>();
+        data.put("ErrorMsg", "Failed, review unchanged.");
+        return runner.renderTemplate(data, "modReviewPage.hbs");
 
     }
 

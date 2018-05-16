@@ -15,12 +15,14 @@
         <li>Time: {{dateTime}}</li>
         <li>Rating: {{rating}}</li>
         <li>Reviewed Status: {{reviewed}}</li>
-        <li>ISAN: {{isanID}}</li>
     </ul>
 
     <form action="/mod/review-check/update" method="post">
-        <input type="radio" name="approval_field" value="1{{userID}} {{isanID}}"> Approve
-        <input type="radio" name="approval_field" value="0{{userID}} {{isanID}}"> Deny
+        <input type="radio" name="approval_field" value="1"> Approve
+        <input type="radio" name="approval_field" value="0"> Deny
+        <input type="hidden"name="userID_field" value = {{userID}}>
+        <input type="hidden"name="isanID_field" value = {{isanID}}>
+
 
         <p><button type="submit">Confirm</button></p>
     </form>
