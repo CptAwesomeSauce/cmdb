@@ -26,6 +26,8 @@ public class ProjectController {
 
     public Object getNewUserForm(Request req, Response resp) {return runner.renderTemplate(null, "new-user-form.hbs"); }
 
+    public Object getReview(Request req, Response resp){ return runner.renderTemplate(null, "writeReviewForm.hbs"); }
+
     public Object getMovieList(Request req, Response resp) {
         String title = req.queryParams("title_field");
         try(DbFacade db = new DbFacade()) {
@@ -56,7 +58,7 @@ public class ProjectController {
             sess.attribute("username", uname);
             sess.attribute("auth", true);
 
-            //System.out.println(result);
+
             if (result == 1) {
                 sess.attribute("type", 1);
                 return runner.renderTemplate(null, "suc-user.hbs");
@@ -64,7 +66,7 @@ public class ProjectController {
                 sess.attribute("type", 2);
                 return runner.renderTemplate(null, "suc-mod.hbs");
             } else if (result == 3) {
-                sess.attribute("type", 2);
+                sess.attribute("type", 3);
                 return runner.renderTemplate(null, "suc-admin.hbs");
             } else {
                 sess.attribute("type", 0);
@@ -394,5 +396,43 @@ public class ProjectController {
         return runner.renderTemplate(data, "adminFreezeUserForm.hbs");
 
     }
+
+    public Object getReviewForm(Request req, Response resp){
+        ArrayList<Map<String,String>> movies = new ArrayList<>();
+        Map<String,String> row = new HashMap<>();
+        row.put("ISAN_ID", req.params(":ISN"));
+        movies.add(row);
+        Map<String, Object> data = new HashMap<>();
+        data.put("movie", movies);
+
+        return runner.renderTemplate(data, "writeReviewForm.hbs");
+    }
+
+    public Object postReviewSuccess(Request req, Response resp){
+        String commentIn = req.queryParams("comment_field");
+        String ratingIn = req.queryParams("rating_field");
+        String isanIN = req.params(":ISN");
+        String IDIn = req.session().attribute("username");
+        try(DbFacade db = new DbFacade()){
+            db.addReview(IDIn, isanIN, commentIn, ratingIn);
+            String type = Integer.toString(req.session().attribute("type"));
+            if(type.equals("1"))
+                return runner.renderTemplate(null, "suc-review-user.hbs");
+            else if(type.equals("2"))
+                return runner.renderTemplate(null, "suc-review-mod.hbs");
+            else if(type.equals("3"))
+                return runner.renderTemplate(null, "suc-review-admin.hbs");
+            else
+                return runner.renderTemplate(null, "homepage.hbs");
+
+
+        }catch(SQLException e){
+            resp.status(500);
+            System.err.println("Couldn't add review: " + e.getMessage());
+            return runner.renderTemplate(null, "homepage.hbs");
+        }
+
+    }
+
 
 }

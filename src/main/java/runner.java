@@ -25,6 +25,9 @@ public class runner {
         get("/user-reviews", controller::getUserReview);
         get("/user-reviews/:ISN", controller::getUserReviews);
 
+        get("/write-review/:ISN", controller::getReviewForm);
+        get("/write-review", controller::getReview);
+        post("/review-success/:ISN", controller::postReviewSuccess);
         get("/movie-by-genre", controller::getMovieListGenre);
 
         get("/movie-info/:ISN", controller::getMovies);
@@ -37,8 +40,6 @@ public class runner {
         post("/mod/review-check/update", controller::approveReview);
         get("/mod/freezeUser", controller::displayFreezeUserForm);
         post("/mod/freezeUser/result", controller::modFreezeUser);
-
-
 
         get("/admin/adminhome", controller::getAdminHome);
         get("/admin/promote-user", controller::promoteDemoteForm);

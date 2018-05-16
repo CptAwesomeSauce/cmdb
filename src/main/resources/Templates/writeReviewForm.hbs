@@ -1,0 +1,33 @@
+{{>header.hbs}}
+
+<ul>
+    {{#movie}}
+        <ul>
+            <form action="/review-success/{{ISAN_ID}}" method="post">
+
+                <p>Write a review:</p>
+                <label for="comments">Comments: <br></label>
+                <textarea rows="15" cols="50" name="comment_field"></textarea> <br>
+
+                <p>Rating:
+                    <br>
+                    <input type="radio" name="rating_field" value="1"> 1★ <br>
+                    <input type="radio" name="rating_field" value="2"> 2★★ <br>
+                    <input type="radio" name="rating_field" value="3"> 3★★★ <br>
+                    <input type="radio" name="rating_field" value="4"> 4★★★★ <br>
+                    <input type="radio" name="rating_field" value="5"> 5★★★★★ <br>
+
+                </p>
+
+                <p><button type="submit">Submit Review</button></p>
+
+            </form>
+        </ul>
+
+
+        </ul>
+    {{/movie}}
+
+
+
+{{>footer.hbs}}

@@ -71,7 +71,8 @@ public class DbFacade implements AutoCloseable {
         Object param = new Timestamp(date.getTime());
 
         try {
-            String sql = "INSERT INTO review (dateTime, User_ID, isanID, comments, rating) VALUES(?, ?, ?, ?, ?);";
+            String sql = "INSERT INTO review (dateTime, User_ID, isanID, comments, rating, reviewed) " +
+                    "VALUES(?, ?, ?, ?, ?,?);";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.clearParameters();
             pstmt.setObject(1, param);
@@ -79,6 +80,7 @@ public class DbFacade implements AutoCloseable {
             pstmt.setString(3, isanID);
             pstmt.setString(4, comments);
             pstmt.setString(5, rating);
+            pstmt.setString(6, "0");
             int count = pstmt.executeUpdate();
             if(count > 0)
                 return true;
@@ -261,7 +263,7 @@ public class DbFacade implements AutoCloseable {
 
     public ResultSet getReviews(String ISAN)throws SQLException{
         String sql = "SELECT review.comments, review.rating, movie.title FROM review, movie " +
-                "WHERE isanID = ? AND review.isanID = movie.ISAN_ID";
+                "WHERE isanID = ? AND review.isanID = movie.ISAN_ID AND review.reviewed = 1";
         System.err.println("in get reviews... ISN = " +ISAN);
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.clearParameters();
