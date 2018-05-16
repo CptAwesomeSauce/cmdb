@@ -42,6 +42,9 @@ public class ProjectController {
                 row.put("ISAN_ID", rset.getString(2));
                 movies.add(row);
             }
+            if (movies.isEmpty()) {
+                return runner.renderTemplate(null,"movie-list-empty.hbs");
+            }
             Map<String,Object> data = new HashMap<>();
             data.put("movies",movies);
             return runner.renderTemplate(data,"movie-list-partial.hbs");
@@ -302,6 +305,9 @@ public class ProjectController {
                 row.put("rating", rset.getString(2));
                 row.put("comments", rset.getString(1));
                 reviews.add(row);
+            }
+            if (reviews.isEmpty()) {
+                return runner.renderTemplate(null,"review-list-empty.hbs");
             }
             Map<String,Object> data = new HashMap<>();
             data.put("reviews",reviews);
