@@ -29,6 +29,7 @@ public class runner {
 
         get("/movie-info/:ISN", controller::getMovies);
         get("/newuser", controller::createNewUser);
+        post("new-user-form", controller::getNewUserForm);
         get("/user/userhome", controller::getUserHome);
         get("/mod/modhome", controller::getModHome);
         get("/admin/adminhome", controller::getAdminHome);

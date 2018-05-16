@@ -12,63 +12,21 @@ import static spark.Spark.halt;
 
 public class ProjectController {
 
-    public Object getMovies(Request req, Response resp) throws SQLException{
-        try (DbFacade db = new DbFacade()){
-            ResultSet rset = db.getMovieInfo(req.params(":ISN"));
-
-            ArrayList<Map<String,String>> movies = new ArrayList<>();
-            while(rset.next()){
-                Map<String,String> row = new HashMap<>();
-                row.put("title", rset.getString(1));
-                row.put("ISAN_ID", rset.getString(2));
-                row.put("genre", rset.getString(3));
-                row.put("MPAA_Rating", rset.getString(4));
-                row.put("language", rset.getString(5));
-                row.put("length", rset.getString(6));
-                row.put("date", rset.getString(7));
-                movies.add(row);
-            }
-
-            Map<String, Object> data = new HashMap<>();
-            data.put("movie", movies);
-            try {
-                if (req.session().attribute("auth").equals(true)) {
-                    return runner.renderTemplate(data, "movie-infoU.hbs");
-                } else {
-                    return runner.renderTemplate(data, "movie-infoN.hbs");
-                }
-            }catch(NullPointerException ex){
-                System.err.println("getMovies:"+ex.getMessage());
-                return runner.renderTemplate(data, "movie-infoN.hbs");
-            }
-        } catch(SQLException e) {
-            resp.status(500);
-            System.err.println("postLoginForm: " + e.getMessage());
-            return "";
-        }
-    }
 
 
-    public Object displayHome(Request req, Response resp){
-            return runner.renderTemplate(null, "homepage.hbs");
-    }
+    public Object displayHome(Request req, Response resp){ return runner.renderTemplate(null, "homepage.hbs"); }
 
-    public Object getUserHome(Request req, Response resp) {
-        return runner.renderTemplate(null, "user-home.hbs");
-    }
+    public Object getUserHome(Request req, Response resp) { return runner.renderTemplate(null, "user-home.hbs"); }
 
-    public Object getModHome(Request req, Response resp) {
-        return runner.renderTemplate(null, "admin-home.hbs");
-    }
+    public Object getModHome(Request req, Response resp) { return runner.renderTemplate(null, "admin-home.hbs"); }
 
-    public Object getAdminHome(Request req, Response resp) {
-        return runner.renderTemplate(null, "admin-home.hbs");
-    }
+    public Object getAdminHome(Request req, Response resp) { return runner.renderTemplate(null, "admin-home.hbs"); }
 
     public Object getMovieInfo(Request req, Response resp) { return runner.renderTemplate(null, "movie-item.hbs"); }
 
-    public Object getUserReview(Request req, Response resp) {return runner.renderTemplate(null, "review-list.hbs");}
+    public Object getUserReview(Request req, Response resp) {return runner.renderTemplate(null, "review-list.hbs"); }
 
+    public Object getNewUserForm(Request req, Response resp) {return runner.renderTemplate(null, "new-user-form.hbs"); }
 
     public Object getMovieList(Request req, Response resp) {
         String title = req.queryParams("title_field");
@@ -182,21 +140,29 @@ public class ProjectController {
         if (pwd1.equals(pwd2)) {
             try (DbFacade db = new DbFacade()) {
 
-                if(db.checkUserName(uID)) {
+                if(db.checkUserName(uID).equals(true)) {
                     Boolean result = db.createNewUser(fname, lname, uID, pwd1);
+                    Session sess = req.session();
+                    sess.attribute("username", uID);
+                    sess.attribute("auth", true);
+                    sess.attribute("type", 1);
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("msg", "success");
+                    return runner.renderTemplate(data, "suc-new-user.hbs");
+                }else{
+                    Map<String,Object> data = new HashMap<>();
+                    data.put("msg", "Create failed!");
+                    return runner.renderTemplate(data, "new-user-form.hbs");
                 }
-                Map<String,Object> data = new HashMap<>();
-                data.put("msg", "success");
-                return runner.renderTemplate(data, "homepage.hbs");
             } catch (SQLException ex) {
                 Map<String,Object> data = new HashMap<>();
                 data.put("msg", "Create failed!");
-                return runner.renderTemplate(data, "homepage.hbs");
+                return runner.renderTemplate(data, "new-user-form.hbs");
             }
         }else{
             Map<String,Object> data = new HashMap<>();
             data.put("msg", "password do not match!");
-            return runner.renderTemplate(data, "homepage.hbs");
+            return runner.renderTemplate(data, "new-user-form.hbs");
         }
     }
 
@@ -285,4 +251,41 @@ public class ProjectController {
             return runner.renderTemplate(null,"review-list.hbs");
         }
     }
+
+    public Object getMovies(Request req, Response resp) throws SQLException{
+        try (DbFacade db = new DbFacade()){
+            ResultSet rset = db.getMovieInfo(req.params(":ISN"));
+
+            ArrayList<Map<String,String>> movies = new ArrayList<>();
+            while(rset.next()){
+                Map<String,String> row = new HashMap<>();
+                row.put("title", rset.getString(1));
+                row.put("ISAN_ID", rset.getString(2));
+                row.put("genre", rset.getString(3));
+                row.put("MPAA_Rating", rset.getString(4));
+                row.put("language", rset.getString(5));
+                row.put("length", rset.getString(6));
+                row.put("date", rset.getString(7));
+                movies.add(row);
+            }
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("movie", movies);
+            try {
+                if (req.session().attribute("auth").equals(true)) {
+                    return runner.renderTemplate(data, "movie-infoU.hbs");
+                } else {
+                    return runner.renderTemplate(data, "movie-infoN.hbs");
+                }
+            }catch(NullPointerException ex){
+                System.err.println("getMovies:"+ex.getMessage());
+                return runner.renderTemplate(data, "movie-infoN.hbs");
+            }
+        } catch(SQLException e) {
+            resp.status(500);
+            System.err.println("postLoginForm: " + e.getMessage());
+            return "";
+        }
+    }
+
 }
