@@ -270,7 +270,6 @@ public class DbFacade implements AutoCloseable {
         pstmt.setString(1, ISAN);
         return pstmt.executeQuery();
 
-
     }
 
     public ResultSet searchByGenre(String gen){
@@ -403,6 +402,16 @@ public class DbFacade implements AutoCloseable {
         if(pstmt.executeUpdate() > 0)
             return true;
         return false;
+    }
+
+    public ResultSet getMyReviews(String uID) throws SQLException{
+        String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, review.reviewed " +
+                "FROM review, movie " +
+                "WHERE User_ID = ? AND review.isanID = movie.ISAN_ID";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, uID);
+        return pstmt.executeQuery();
     }
 
 }

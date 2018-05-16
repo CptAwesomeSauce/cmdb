@@ -434,5 +434,30 @@ public class ProjectController {
 
     }
 
+    public Object displayMyReviews(Request req, Response resp){
+        String userID = req.session().attribute("username");
+        try(DbFacade db = new DbFacade()){
+            ResultSet rset = db.getMyReviews(userID);
+            ArrayList<Map<String, String>> reviews = new ArrayList<>();
+            while (rset.next()) {
+                Map<String, String> row = new HashMap<>();
+                row.put("comments", rset.getString(1));
+                row.put("rating", rset.getString(2));
+                row.put("title", rset.getString(3));
+                row.put("dateTime", rset.getString(4));
+                row.put("reviewed", rset.getString(5));
+                reviews.add(row);
+            }
+            Map<String, Object> data = new HashMap<>();
+            data.put("reviews", reviews);
+            return runner.renderTemplate(data, "displayMyReviews.hbs");
+        }catch (SQLException e){
+            resp.status(500);
+            System.err.println("Couldn't find your reviews: " + e.getMessage());
+            return "";
+
+        }
+    }
+
 
 }
