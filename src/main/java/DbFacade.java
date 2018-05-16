@@ -311,4 +311,36 @@ public class DbFacade implements AutoCloseable {
         return false;
 
     }
+
+    public ResultSet checkReviewed() throws SQLException{
+        String sql = null;
+        ResultSet rset = null;
+        Statement stmt = conn.createStatement();
+        sql = "SELECT r.User_ID, m.title, r.comments, r.dateTime, r.rating, r.reviewed, r.isanID " +
+                "FROM review r, movie m " +
+                "WHERE r.isanID = m.ISAN_ID AND r.reviewed = 0 ";
+        rset = stmt.executeQuery(sql);
+        return rset;
+
+
+    }
+
+    public Boolean updateReviewStatus(String uID, String isan, int status)throws SQLException{
+        String sql = null;
+        ResultSet rset = null;
+        sql = "UPDATE review " +
+                "SET reviewed = ? " +
+                "WHERE User_ID = ? AND isanID = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setInt(1, status);
+        pstmt.setString(2, uID);
+        pstmt.setString(3,isan);
+
+        if(pstmt.executeUpdate() > 0)
+            return true;
+        return false;
+
+    }
+
 }

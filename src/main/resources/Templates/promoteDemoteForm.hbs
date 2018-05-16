@@ -1,8 +1,11 @@
+<a href="/admin/adminhome">Return to homepage </a>
+<br>
+
 {{#Msg}}
     <p style="font-weight: bold; color: red;">{{Msg}}</p>
 {{/Msg}}
 
-<form action="success-user-change" method="post">
+<form action="/admin/success-user-change" method="post">
 
     <label for="ID">Enter a user ID:</label>
     <input type="text" id ="ID" name="ID_field"> <br>
@@ -13,6 +16,6 @@
         <input type="radio" name="priv_field" value="3"> Admin
     </p>
 
-    <p><button type="submit">Search</button></p>
+    <p><button type="submit">Change Status</button></p>
 
 </form>

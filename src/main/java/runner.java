@@ -28,13 +28,16 @@ public class runner {
         get("/movie-info/:ISN", controller::getMovies);
         get("/newuser", controller::createNewUser);
         get("/user/userhome", controller::getUserHome);
+
         get("/mod/modhome", controller::getModHome);
+        get("/mod/review-check", controller::displayReviewCheck);
+        post("/mod/review-check/update", controller::approveReview);
 
 
 
         get("/admin/adminhome", controller::getAdminHome);
-        get("/promote-user", controller::promoteDemoteForm);
-        post("/success-user-change", controller::promoteDemotePost);
+        get("/admin/promote-user", controller::promoteDemoteForm);
+        post("/admin/success-user-change", controller::promoteDemotePost);
 
             //db.addMovie("Animal House", "0000000000001", "Comedy", "R", "English", new Time(90 * 60 * 1000), 1978);
         before("/admin/*", controller::adminBeforeFilter);

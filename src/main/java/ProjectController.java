@@ -2,6 +2,7 @@ import spark.Request;
 import spark.Response;
 import spark.Session;
 
+import javax.xml.transform.Result;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class ProjectController {
 
     public Object getModHome(Request req, Response resp) {
 
-        return runner.renderTemplate(null, "admin-home.hbs");
+        return runner.renderTemplate(null, "mod-home.hbs");
     }
 
     public Object getAdminHome(Request req, Response resp) {
@@ -254,7 +255,7 @@ public class ProjectController {
 
         }catch (SQLException e){
             resp.status(500);
-            System.err.println("getMovieList: " + e.getMessage());
+            System.err.println("PromoteDemote: " + e.getMessage());
             return "";
         }
 
@@ -264,9 +265,69 @@ public class ProjectController {
 
     }
 
-//    public Object reviewCheck(Request req, Response resp){
+    public Object displayReviewCheck(Request req, Response resp){
+        try(DbFacade db = new DbFacade()){
+            ResultSet rset = db.checkReviewed();
+
+            ArrayList<Map<String, String>> reviews = new ArrayList<>();
+            while (rset.next()) {
+                Map<String, String> row = new HashMap<>();
+                row.put("userID", rset.getString(1));
+                row.put("title", rset.getString(2));
+                row.put("comments", rset.getString(3));
+                row.put("dateTime", rset.getString(4));
+                row.put("rating", rset.getString(5));
+                row.put("reviewed", rset.getString(6));
+                row.put("isanID", rset.getString(7));
+                reviews.add(row);
+            }
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("reviews", reviews);
+            return runner.renderTemplate(data, "modReviewCheckPage.hbs");
+
+
+
+        }catch (SQLException e){
+            resp.status(500);
+            System.err.println("displayReviewCheck: " + e.getMessage());
+            return "";
+
+        }
+
+    }
+
+    public Object approveReview(Request req, Response resp){
+        String val = req.queryParams("approval_field");
+        System.out.println(val);
+        int statusIn = val.charAt(0);
+
+
+
+
+//        try(DbFacade db = new DbFacade()){
+//            Boolean updated;
+//            updated = db.updateReviewStatus();
 //
-//    }
+//            if(updated)
+//                return runner.renderTemplate(null, "modReviewSuc.hbs");
+//
+//
+//        }catch (SQLException e){
+//            resp.status(500);
+//            System.err.println("approveReview: " + e.getMessage());
+//            return "";
+//        }
+//
+//        Map<String,Object> data = new HashMap<>();
+//        data.put("ErrorMsg", "Failed, review unchaged.");
+//        return runner.renderTemplate(data, "modReviewPage.hbs");
+
+        return null;
+
+
+
+    }
 
 
 }

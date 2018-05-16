@@ -41,6 +41,9 @@
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
   </component>
+  <component name="DBNavigator.Project.FileConnectionMappingManager">
+    <mapping file-url="file://$PROJECT_DIR$/src/main/resources/Templates/test.sql" connection-id="3d38b0d0-1319-4481-8f41-565a996437fc" session-id="MAIN" current-schema="367_2018_yellow" />
+  </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
     <execution-history>
