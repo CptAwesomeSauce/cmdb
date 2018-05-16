@@ -32,12 +32,13 @@ public class ProjectController {
             Map<String, Object> data = new HashMap<>();
             data.put("movie", movies);
             try {
-                if (req.session().attribute("authenticated")) {
+                if (req.session().attribute("auth").equals(true)) {
                     return runner.renderTemplate(data, "movie-infoU.hbs");
                 } else {
                     return runner.renderTemplate(data, "movie-infoN.hbs");
                 }
             }catch(NullPointerException ex){
+                System.err.println("getMovies:"+ex.getMessage());
                 return runner.renderTemplate(data, "movie-infoN.hbs");
             }
         } catch(SQLException e) {
@@ -68,9 +69,6 @@ public class ProjectController {
 
     public Object getUserReview(Request req, Response resp) {return runner.renderTemplate(null, "review-list.hbs");}
 
-    public Object getMovieInfo(Request req, Response resp) {
-        return runner.renderTemplate(null, "movie-item.hbs");
-    }
 
     public Object getMovieList(Request req, Response resp) {
         String title = req.queryParams("title_field");
@@ -99,7 +97,7 @@ public class ProjectController {
             int result = db.authenticateUser(uname, pwd);
             Session sess = req.session();
             sess.attribute("username", uname);
-            sess.attribute("authenticated", true);
+            sess.attribute("auth", true);
             if(result  == 1){
                 sess.attribute("type", 1);
                 return runner.renderTemplate(null, "suc-user.hbs");
@@ -140,7 +138,7 @@ public class ProjectController {
 
     public Object releaseLogin(Request req, Response resp){
         req.session().attribute("username", "");
-        req.session().attribute("authenticated", false);
+        req.session().attribute("auth", false);
         req.session().attribute("type", 0);
         Map<String,Object> data = new HashMap<>();
         data.put("message", "Logged out successfully");
@@ -148,7 +146,7 @@ public class ProjectController {
     }
 
     public void userBeforeFilter(Request req, Response resp) {
-        Boolean auth = req.session().attribute("authenticated");
+        Boolean auth = req.session().attribute("auth");
         int type = req.session().attribute("type");
         if( auth == null || (!auth) ) {
             if(type != 1)
@@ -157,7 +155,7 @@ public class ProjectController {
     }
 
     public void modBeforeFilter(Request req, Response resp) {
-        Boolean auth = req.session().attribute("authenticated");
+        Boolean auth = req.session().attribute("auth");
         int type = req.session().attribute("type");
         if( auth == null || (!auth) ) {
             if(type != 2)
@@ -166,7 +164,7 @@ public class ProjectController {
     }
 
     public void adminBeforeFilter(Request req, Response resp) {
-        Boolean auth = req.session().attribute("authenticated");
+        Boolean auth = req.session().attribute("auth");
         int type = req.session().attribute("type");
         if( auth == null || (!auth) ) {
             if(type != 3)

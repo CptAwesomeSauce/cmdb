@@ -13,11 +13,13 @@
         </ul>
     {{/movie}}
 </ul>
-
-<a href="/user-reviews/{{ISAN_ID}}">View user reviews</a>
-
-<a href="/write-review">Write a Review</a>
-
-
+<ul>
+    {{#movie}}
+        <ul>
+            <a href="/user-reviews/{{ISAN_ID}}">View user reviews</a>
+            <a href="/write-review/{{ISAN_ID}}">Write a Review</a>
+        </ul>
+    {{/movie}}
+</ul>
 
 {{>footer.hbs}}
