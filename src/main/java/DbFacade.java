@@ -294,4 +294,21 @@ public class DbFacade implements AutoCloseable {
         return r;
 
     }
+
+    public Boolean changeUserStatus(String uID, int type) throws SQLException{
+        String sql = null;
+        ResultSet rset = null;
+        sql = "UPDATE user " +
+                "SET user_type = ? " +
+                "WHERE user_ID = ? ";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setInt(1, type);
+        pstmt.setString(2, uID);
+
+        if(pstmt.executeUpdate() > 0)
+            return true;
+        return false;
+
+    }
 }

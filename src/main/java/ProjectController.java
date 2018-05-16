@@ -233,4 +233,40 @@ public class ProjectController {
         }
 
     }
+
+    public Object promoteDemoteForm(Request req, Response resp){
+        return runner.renderTemplate(null, "promoteDemoteForm.hbs");
+    }
+
+    public Object promoteDemotePost(Request req, Response resp){
+        String IDIn = req.queryParams("ID_field");
+        String typeIn = req.queryParams("priv_field");
+
+        try(DbFacade db = new DbFacade()){
+            boolean updated;
+            updated = db.changeUserStatus(IDIn, Integer.parseInt(typeIn));
+
+            if(updated) {
+                Map<String,Object> data = new HashMap<>();
+                data.put("Msg", "User Status Successfully Updated!");
+                return runner.renderTemplate(data, "promoteDemoteForm.hbs");
+            }
+
+        }catch (SQLException e){
+            resp.status(500);
+            System.err.println("getMovieList: " + e.getMessage());
+            return "";
+        }
+
+        Map<String,Object> data = new HashMap<>();
+        data.put("Msg", "Failed, Status Not Updated.");
+        return runner.renderTemplate(data, "promoteDemoteForm.hbs");
+
+    }
+
+//    public Object reviewCheck(Request req, Response resp){
+//
+//    }
+
+
 }
