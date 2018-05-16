@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+//commit test
+
 import static spark.Spark.halt;
 
 public class ProjectController {
@@ -146,6 +148,8 @@ public class ProjectController {
             return runner.renderTemplate(data, "homepage.hbs");
         }
     }
+
+
 
     public Object getMovieListGenre(Request req, Response resp) {
         String genreIn = req.queryParams("genre_field");
