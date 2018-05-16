@@ -1,0 +1,18 @@
+{{>header.hbs}}
+
+{{#ErrorMsg}}
+    <p style="font-weight: bold; color: red;">{{ErrorMsg}}</p>
+{{/ErrorMsg}}
+
+<a href="/mod/modhome">Return to homepage </a>
+<br>
+
+<form action="/mod/freezeUser/result" method="post">
+
+    <p>Specify a user to freeze:</p>
+    <label for="uID">User ID:</label>
+    <input type="text" id ="uID" name="ID_field"> <br>
+    <p><button type="submit">BAN</button></p>
+</form>
+
+{{>footer.hbs}}

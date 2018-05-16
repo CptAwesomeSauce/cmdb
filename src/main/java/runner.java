@@ -35,12 +35,17 @@ public class runner {
         get("/mod/modhome", controller::getModHome);
         get("/mod/review-check", controller::displayReviewCheck);
         post("/mod/review-check/update", controller::approveReview);
+        get("/mod/freezeUser", controller::displayFreezeUserForm);
+        post("/mod/freezeUser/result", controller::modFreezeUser);
 
 
 
         get("/admin/adminhome", controller::getAdminHome);
         get("/admin/promote-user", controller::promoteDemoteForm);
         post("/admin/success-user-change", controller::promoteDemotePost);
+        get("/admin/freezeUser", controller::adminDisplayFreezeUserForm);
+        post("/admin/freezeUser/result", controller::adminFreezeUser);
+
 
             //db.addMovie("Animal House", "0000000000001", "Comedy", "R", "English", new Time(90 * 60 * 1000), 1978);
         before("/admin/*", controller::adminBeforeFilter);

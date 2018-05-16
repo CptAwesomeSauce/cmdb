@@ -1,5 +1,9 @@
 {{>header.hbs}}
 
+{{#errorMsg}}
+    <p style="font-weight: bold; color: red;">{{errorMsg}}</p>
+{{/errorMsg}}
+
 <form action="authenticate" method="post">
 
     <label for="uname">Username:</label>
