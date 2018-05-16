@@ -65,6 +65,9 @@ public class ProjectController {
     }
 
     public Object getMovieInfo(Request req, Response resp) { return runner.renderTemplate(null, "movie-item.hbs"); }
+
+    public Object getUserReview(Request req, Response resp) {return runner.renderTemplate(null, "review-list.hbs");}
+
     public Object getMovieList(Request req, Response resp) {
         String title = req.queryParams("title_field");
         try(DbFacade db = new DbFacade()) {
@@ -195,4 +198,23 @@ public class ProjectController {
         }
     }
 
+    public Object getUserReviews(Request req, Response resp){
+        try(DbFacade db = new DbFacade()){
+            ResultSet rset = db.getReviews(req.params(":ISN"));
+            ArrayList<Map<String,String>> reviews = new ArrayList<>();
+            while(rset.next()) {
+                Map<String,String> row = new HashMap<>();
+                row.put("title", rset.getString(3));
+                row.put("rating", rset.getString(2));
+                row.put("comments", rset.getString(1));
+                reviews.add(row);
+            }
+            Map<String,Object> data = new HashMap<>();
+            data.put("reviews",reviews);
+            return runner.renderTemplate(data,"review-list-partial.hbs");
+        }catch(SQLException ex){
+            System.err.println("getUserReviews:" + ex.getMessage());
+            return runner.renderTemplate(null,"review-list.hbs");
+        }
+    }
 }

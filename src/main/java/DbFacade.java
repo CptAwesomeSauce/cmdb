@@ -1,3 +1,5 @@
+import spark.Request;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -256,5 +258,17 @@ public class DbFacade implements AutoCloseable {
         ResultSet rset = pstmt.executeQuery();
         
         return true;
+    }
+
+    public ResultSet getReviews(String ISAN)throws SQLException{
+        String sql = "SELECT review.comments, review.rating, movie.title FROM review, movie " +
+                "WHERE isanID = ? AND review.isanID = movie.ISAN_ID";
+        System.err.println("in get reviews... ISN = " +ISAN);
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, ISAN);
+        return pstmt.executeQuery();
+
+
     }
 }

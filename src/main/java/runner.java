@@ -22,7 +22,8 @@ public class runner {
         post( "/deauthenticate", controller::releaseLogin);
         get("/movie-list", controller::getMovieList);
         get("/movie-info", controller::getMovieInfo);
-
+        get("/user-reviews", controller::getUserReview);
+        get("/user-reviews/:ISN", controller::getUserReviews);
         get("/movie-info/:ISN", controller::getMovies);
         get("/newuser", controller::createNewUser);
         get("/user/userhome", controller::getUserHome);
