@@ -6,7 +6,16 @@
         <li>Movie Title: {{title}}</li>
         <li>Time: {{dateTime}}</li>
         <li>Reviewed: {{reviewed}}</li>
+        <li>User: {{userID}}</li>
     </ul>
+    <form action="/viewReviews/delSuccess" method="Post">
+        <input type="hidden"name="isanID_field" value = {{isan_ID}}>
+        <input type="hidden"name="reviewed_field" value = {{reviewed}}>
+        <input type="hidden"name="ID_field" value = {{userID}}>
+
+        <p><button type="submit">Delete Review</button></p>
+
+    </form>
     <br>
 {{/reviews}}
 

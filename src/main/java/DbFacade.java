@@ -1,3 +1,4 @@
+import javax.xml.transform.Result;
 import javax.xml.ws.Response;
 import java.sql.*;
 import java.util.ArrayList;
@@ -405,7 +406,7 @@ public class DbFacade implements AutoCloseable {
     }
 
     public ResultSet getMyReviews(String uID) throws SQLException{
-        String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, review.reviewed " +
+        String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, review.reviewed, movie.ISAN_ID " +
                 "FROM review, movie " +
                 "WHERE User_ID = ? AND review.isanID = movie.ISAN_ID";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -413,5 +414,15 @@ public class DbFacade implements AutoCloseable {
         pstmt.setString(1, uID);
         return pstmt.executeQuery();
     }
+
+    public ResultSet getAllReviews() throws  SQLException{
+        String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, review.reviewed, movie.ISAN_ID, review.User_ID " +
+                "FROM review, movie " +
+                "WHERE review.isanID = movie.ISAN_ID";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        return pstmt.executeQuery();
+    }
+
 
 }

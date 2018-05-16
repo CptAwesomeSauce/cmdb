@@ -1,3 +1,4 @@
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import spark.Request;
 import spark.Response;
 import spark.Session;
@@ -362,11 +363,12 @@ public class ProjectController {
 
         }catch (SQLException e){
             resp.status(500);
-            System.err.println("Can't Delete: " + e.getMessage());
-            return "";
+            Map<String,Object> data = new HashMap<>();
+            data.put("ErrorMsg", "Failed, can't ban that user, delete their review first.");
+            return runner.renderTemplate(data, "freezeUserForm.hbs");
         }
         Map<String,Object> data = new HashMap<>();
-        data.put("ErrorMsg", "Failed, input does not match a user.");
+        data.put("ErrorMsg", "Failed, can't ban that user.");
         return runner.renderTemplate(data, "freezeUserForm.hbs");
     }
 
@@ -409,12 +411,14 @@ public class ProjectController {
     }
 
     public Object postReviewSuccess(Request req, Response resp){
-        String commentIn = req.queryParams("comment_field");
-        String ratingIn = req.queryParams("rating_field");
         String isanIN = req.params(":ISN");
         String IDIn = req.session().attribute("username");
+        String ratingIn = req.queryParams("rating_field");
+        String commentsIn = req.queryParams("comment_field");
+
         try(DbFacade db = new DbFacade()){
-            db.addReview(IDIn, isanIN, commentIn, ratingIn);
+            db.addReview(IDIn, isanIN, commentsIn, ratingIn);
+
             String type = Integer.toString(req.session().attribute("type"));
             if(type.equals("1"))
                 return runner.renderTemplate(null, "suc-review-user.hbs");
@@ -435,6 +439,34 @@ public class ProjectController {
     }
 
     public Object displayMyReviews(Request req, Response resp){
+        String type = Integer.toString(req.session().attribute("type"));
+        if(type.equals("2")){
+            try(DbFacade db = new DbFacade()){
+                ResultSet rset = db.getAllReviews();
+                ArrayList<Map<String, String>> reviews = new ArrayList<>();
+                while (rset.next()) {
+                    Map<String, String> row = new HashMap<>();
+                    row.put("comments", rset.getString(1));
+                    row.put("rating", rset.getString(2));
+                    row.put("title", rset.getString(3));
+                    row.put("dateTime", rset.getString(4));
+                    row.put("reviewed", rset.getString(5));
+                    row.put("isan_ID", rset.getString(6));
+                    row.put("userID", rset.getString(7));
+                    reviews.add(row);
+                }
+                Map<String, Object> data = new HashMap<>();
+                data.put("reviews", reviews);
+                return runner.renderTemplate(data, "displayMyReviews.hbs");
+            }catch (SQLException e){
+                resp.status(500);
+                System.err.println("Couldn't find your reviews: " + e.getMessage());
+                return "";
+
+            }
+
+        }
+
         String userID = req.session().attribute("username");
         try(DbFacade db = new DbFacade()){
             ResultSet rset = db.getMyReviews(userID);
@@ -446,6 +478,7 @@ public class ProjectController {
                 row.put("title", rset.getString(3));
                 row.put("dateTime", rset.getString(4));
                 row.put("reviewed", rset.getString(5));
+                row.put("isan_ID", rset.getString(6));
                 reviews.add(row);
             }
             Map<String, Object> data = new HashMap<>();
@@ -457,6 +490,40 @@ public class ProjectController {
             return "";
 
         }
+    }
+
+    public Object deleteMyReview(Request req, Response resp){
+        String IDIn = req.session().attribute("username");
+
+        String type = Integer.toString(req.session().attribute("type"));
+        if(type.equals("2")){
+            IDIn = req.queryParams("ID_field");
+        }
+
+        String reviewedIn = req.queryParams("reviewed_field");
+        String isanIN = req.queryParams("isanID_field");
+
+
+        try(DbFacade db = new DbFacade()){
+            db.deleteReview(IDIn, isanIN, Integer.parseInt(reviewedIn));
+            //String type = Integer.toString(req.session().attribute("type"));
+            if(type.equals("1"))
+                return runner.renderTemplate(null, "suc-reviewDel-user.hbs");
+            else if(type.equals("2"))
+                return runner.renderTemplate(null, "suc-reviewDel-mod.hbs");
+            else if(type.equals("3"))
+                return runner.renderTemplate(null, "suc-reviewDel-admin.hbs");
+            else
+                return runner.renderTemplate(null, "homepage.hbs");
+
+
+        }catch(SQLException e){
+            resp.status(500);
+            System.err.println("Couldn't add review: " + e.getMessage());
+            return runner.renderTemplate(null, "homepage.hbs");
+        }
+
+
     }
 
 
