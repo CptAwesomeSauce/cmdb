@@ -22,11 +22,14 @@ public class runner {
         post( "/deauthenticate", controller::releaseLogin);
         get("/movie-list", controller::getMovieList);
         get("/movie-info", controller::getMovieInfo);
+        get("/user-reviews", controller::getUserReview);
+        get("/user-reviews/:ISN", controller::getUserReviews);
 
         get("/movie-by-genre", controller::getMovieListGenre);
 
         get("/movie-info/:ISN", controller::getMovies);
         get("/newuser", controller::createNewUser);
+        post("new-user-form", controller::getNewUserForm);
         get("/user/userhome", controller::getUserHome);
 
         get("/mod/modhome", controller::getModHome);

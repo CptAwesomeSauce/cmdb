@@ -21,8 +21,8 @@ public class DbFacade implements AutoCloseable {
 
     private void openDB() throws SQLException {
         // Connect to the database
-        String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
-        //String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
+        //String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
+        String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
         String username = "yellow_2018";
         String password = "367rocks!";
 
@@ -257,6 +257,18 @@ public class DbFacade implements AutoCloseable {
         ResultSet rset = pstmt.executeQuery();
         
         return true;
+    }
+
+    public ResultSet getReviews(String ISAN)throws SQLException{
+        String sql = "SELECT review.comments, review.rating, movie.title FROM review, movie " +
+                "WHERE isanID = ? AND review.isanID = movie.ISAN_ID";
+        System.err.println("in get reviews... ISN = " +ISAN);
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, ISAN);
+        return pstmt.executeQuery();
+
+
     }
 
     public ResultSet searchByGenre(String gen){
