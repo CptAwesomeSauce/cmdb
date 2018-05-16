@@ -23,15 +23,20 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="3d38b0d0-1319-4481-8f41-565a996437fc">
+        <schema name="367_2018_company" object-types="function, procedure, table, view" />
+        <schema name="367_2018_yellow" object-types="column, constraint, function, index, procedure, table, dataset trigger, view" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="58cb8a43-49a5-4762-820e-34d8f3d4f050">
+    <connection id="3d38b0d0-1319-4481-8f41-565a996437fc">
       <console name="Connection" type="STANDARD" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="58cb8a43-49a5-4762-820e-34d8f3d4f050" />
+    <connection id="3d38b0d0-1319-4481-8f41-565a996437fc" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -56,7 +61,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="58cb8a43-49a5-4762-820e-34d8f3d4f050" active="true">
+      <connection id="3d38b0d0-1319-4481-8f41-565a996437fc" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -67,8 +72,8 @@
           <driver-library value="" />
           <driver value="" />
           <url-type value="DATABASE" />
-          <host value="localhost" />
-          <port value="2000" />
+          <host value="mal.cs.plu.edu" />
+          <port value="3306" />
           <database value="" />
           <os-authentication value="false" />
           <empty-password value="false" />
@@ -76,7 +81,7 @@
           <password value="MzY3cm9ja3Mh" />
         </database>
         <properties>
-          <auto-commit value="false" />
+          <auto-commit value="true" />
         </properties>
         <ssh-settings>
           <active value="false" />

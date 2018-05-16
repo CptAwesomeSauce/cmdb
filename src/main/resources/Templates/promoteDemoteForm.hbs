@@ -1,0 +1,18 @@
+{{#Msg}}
+    <p style="font-weight: bold; color: red;">{{Msg}}</p>
+{{/Msg}}
+
+<form action="success-user-change" method="post">
+
+    <label for="ID">Enter a user ID:</label>
+    <input type="text" id ="ID" name="ID_field"> <br>
+
+    <p>Change privilege to:
+        <input type="radio" name="priv_field" value="1"> Standard User
+        <input type="radio" name="priv_field" value="2"> Moderator
+        <input type="radio" name="priv_field" value="3"> Admin
+    </p>
+
+    <p><button type="submit">Search</button></p>
+
+</form>

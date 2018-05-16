@@ -24,6 +24,9 @@ public class runner {
         get("/movie-info", controller::getMovieInfo);
         get("/user-reviews", controller::getUserReview);
         get("/user-reviews/:ISN", controller::getUserReviews);
+
+        get("/movie-by-genre", controller::getMovieListGenre);
+
         get("/movie-info/:ISN", controller::getMovies);
         get("/newuser", controller::createNewUser);
         get("/user/userhome", controller::getUserHome);

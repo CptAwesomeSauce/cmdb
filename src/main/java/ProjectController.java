@@ -68,6 +68,10 @@ public class ProjectController {
 
     public Object getUserReview(Request req, Response resp) {return runner.renderTemplate(null, "review-list.hbs");}
 
+    public Object getMovieInfo(Request req, Response resp) {
+        return runner.renderTemplate(null, "movie-item.hbs");
+    }
+
     public Object getMovieList(Request req, Response resp) {
         String title = req.queryParams("title_field");
         try(DbFacade db = new DbFacade()) {
@@ -197,6 +201,72 @@ public class ProjectController {
             return runner.renderTemplate(data, "homepage.hbs");
         }
     }
+
+    public Object getMovieListGenre(Request req, Response resp) {
+        String genreIn = req.queryParams("genre_field");
+
+        try (DbFacade db = new DbFacade()) {
+            ResultSet rset = db.searchByGenre(genreIn);
+
+            ArrayList<Map<String, String>> movies = new ArrayList<>();
+            while (rset.next()) {
+                Map<String, String> row = new HashMap<>();
+                row.put("title", rset.getString(1));
+                row.put("ISAN_ID", rset.getString(2));
+                row.put("genre", rset.getString(3));
+                row.put("MPAA_Rating", rset.getString(4));
+                row.put("language", rset.getString(5));
+                row.put("length", rset.getString(6));
+                row.put("date", rset.getString(7));
+                movies.add(row);
+            }
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("movies", movies);
+            return runner.renderTemplate(data, "movie-list-partial.hbs");
+
+        } catch (SQLException e) {
+            resp.status(500);
+            System.err.println("getMovieList: " + e.getMessage());
+            return "";
+        }
+
+    }
+
+    public Object promoteDemoteForm(Request req, Response resp){
+        return runner.renderTemplate(null, "promoteDemoteForm.hbs");
+    }
+
+    public Object promoteDemotePost(Request req, Response resp){
+        String IDIn = req.queryParams("ID_field");
+        String typeIn = req.queryParams("priv_field");
+
+        try(DbFacade db = new DbFacade()){
+            boolean updated;
+            updated = db.changeUserStatus(IDIn, Integer.parseInt(typeIn));
+
+            if(updated) {
+                Map<String,Object> data = new HashMap<>();
+                data.put("Msg", "User Status Successfully Updated!");
+                return runner.renderTemplate(data, "promoteDemoteForm.hbs");
+            }
+
+        }catch (SQLException e){
+            resp.status(500);
+            System.err.println("getMovieList: " + e.getMessage());
+            return "";
+        }
+
+        Map<String,Object> data = new HashMap<>();
+        data.put("Msg", "Failed, Status Not Updated.");
+        return runner.renderTemplate(data, "promoteDemoteForm.hbs");
+
+    }
+
+//    public Object reviewCheck(Request req, Response resp){
+//
+//    }
+
 
     public Object getUserReviews(Request req, Response resp){
         try(DbFacade db = new DbFacade()){

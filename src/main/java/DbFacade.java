@@ -1,5 +1,4 @@
-import spark.Request;
-
+import javax.xml.ws.Response;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -269,6 +268,59 @@ public class DbFacade implements AutoCloseable {
         pstmt.setString(1, ISAN);
         return pstmt.executeQuery();
 
+
+    }
+
+    public ResultSet searchByGenre(String gen){
+
+        ResultSet r = null;
+        //If the genre is other, we want to search for movies that
+        //are all of the genres other than the ones on the homepage
+        if(gen.compareTo("other") == 0){
+            try {
+                String sql = "SELECT * " +
+                        "FROM movie "+
+                        "WHERE LOWER(movie.genre) NOT LIKE '%horror%' " +
+                        "AND LOWER(movie.genre) NOT LIKE '%comedy%' " +
+                        "AND LOWER(movie.genre) NOT LIKE '%romance%' " +
+                        "AND LOWER(movie.genre) NOT LIKE '%action%' ";
+                Statement stmt = conn.createStatement();
+                r = stmt.executeQuery(sql);
+            } catch (SQLException e) {
+                System.out.println("Report Views failed: " + e.getMessage());
+            }
+            return r;
+        }
+
+        try {
+            String sql = "SELECT * " +
+                    "FROM movie "+
+                    "WHERE LOWER(movie.genre) LIKE LOWER(?) ";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.clearParameters();
+            pstmt.setString(1, "%"+gen+"%");
+            r = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.out.println("Report Views failed: " + e.getMessage());
+        }
+        return r;
+
+    }
+
+    public Boolean changeUserStatus(String uID, int type) throws SQLException{
+        String sql = null;
+        ResultSet rset = null;
+        sql = "UPDATE user " +
+                "SET user_type = ? " +
+                "WHERE user_ID = ? ";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setInt(1, type);
+        pstmt.setString(2, uID);
+
+        if(pstmt.executeUpdate() > 0)
+            return true;
+        return false;
 
     }
 }

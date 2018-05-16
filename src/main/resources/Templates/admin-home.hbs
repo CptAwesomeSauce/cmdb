@@ -1,16 +1,21 @@
 {{>header.hbs}}
 <h2>Administrator Home</h2>
+
 <form action="/deauthenticate" method="post">
 
     <p><button type="submit">Log out</button></p>
 </form>
 
-<form action="/post-stevensPage" method="post">
+
+<form action="/movie-list" method="get">
 
     <p>Search for a movie:</p>
     <label for="title">Title:</label>
-    <input type="text" id = "title" name="title_field"> <br>
+    <input type="text" id ="title" name="title_field"> <br>
+    <p><button type="submit">Search</button></p>
+</form>
 
+<form action="/movie-by-genre" method="get">
     <p>Genre:
         <input type="radio" name="genre_field" value="horror"> Horror
         <input type="radio" name="genre_field" value="comedy"> Comedy
@@ -21,6 +26,12 @@
     </p>
 
     <p><button type="submit">Search</button></p>
+
+</form>
+<br>
+<form action="/promote-user" method="get">
+
+    <p><button type="submit">Promote/Demote</button></p>
 
 </form>
 
