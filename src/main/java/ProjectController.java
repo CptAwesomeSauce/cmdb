@@ -457,7 +457,7 @@ public class ProjectController {
                 }
                 Map<String, Object> data = new HashMap<>();
                 data.put("reviews", reviews);
-                return runner.renderTemplate(data, "displayMyReviews.hbs");
+                return runner.renderTemplate(data, "mod-displayReviews.hbs");
             }catch (SQLException e){
                 resp.status(500);
                 System.err.println("Couldn't find your reviews: " + e.getMessage());
@@ -479,6 +479,7 @@ public class ProjectController {
                 row.put("dateTime", rset.getString(4));
                 row.put("reviewed", rset.getString(5));
                 row.put("isan_ID", rset.getString(6));
+                row.put("userID", userID);
                 reviews.add(row);
             }
             Map<String, Object> data = new HashMap<>();
@@ -494,8 +495,8 @@ public class ProjectController {
 
     public Object deleteMyReview(Request req, Response resp){
         String IDIn = req.session().attribute("username");
-
         String type = Integer.toString(req.session().attribute("type"));
+
         if(type.equals("2")){
             IDIn = req.queryParams("ID_field");
         }
@@ -506,7 +507,6 @@ public class ProjectController {
 
         try(DbFacade db = new DbFacade()){
             db.deleteReview(IDIn, isanIN, Integer.parseInt(reviewedIn));
-            //String type = Integer.toString(req.session().attribute("type"));
             if(type.equals("1"))
                 return runner.renderTemplate(null, "suc-reviewDel-user.hbs");
             else if(type.equals("2"))
