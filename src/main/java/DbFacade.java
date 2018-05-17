@@ -182,11 +182,18 @@ public class DbFacade implements AutoCloseable {
     public ResultSet selectReviewByCommentLength(int length, boolean lessThan) {
         ResultSet r = null;
         String sql;
+
         try {
             if(lessThan) {
-                sql = "SELECT * FROM review WHERE LENGTH(review.comments) < ?";
+                sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, " +
+                        "review.reviewed, movie.ISAN_ID, review.User_ID" +
+                        " FROM review, movie " +
+                        "WHERE LENGTH(review.comments) <= ?";
             }else {
-                sql = "SELECT * FROM review WHERE LENGTH(review.comments) > ?";
+                sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, " +
+                        "review.reviewed, movie.ISAN_ID, review.User_ID" +
+                        " FROM review, movie " +
+                        "WHERE LENGTH(review.comments) >= ?";
             }
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.clearParameters();

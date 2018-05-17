@@ -1,0 +1,26 @@
+{{>header.hbs}}
+
+{{#ErrorMsg}}
+    <p style="font-weight: bold; color: red;">{{ErrorMsg}}</p>
+{{/ErrorMsg}}
+
+<a href="/admin/adminhome">Return to homepage </a>
+<br>
+
+<form action="/admin/searchReview/result" method="post">
+
+    <p>Search comments by number of characters: </p>
+    <label for="clength">Comment Length:</label>
+    <input type="text" id ="clength" name="length_field"> <br>
+
+    <p>Search for less than or greater than?
+        <input type="radio" name="lg_field" value="true"> Less Than
+        <input type="radio" name="lg_field" value="false"> Greater Than
+    </p>
+
+
+
+    <p><button type="submit">Search Comments</button></p>
+</form>
+
+{{>footer.hbs}}

@@ -607,5 +607,46 @@ public class ProjectController {
 
     }
 
+    public Object adminListReviewsForm(Request req, Response resp){
+        return runner.renderTemplate(null, "adminReviewCheckForm.hbs");
+    }
+
+    public Object adminReviewPost(Request req, Response resp){
+        String commentLength = req.queryParams("length_field");
+        String boolIn = req.queryParams("lg_field");
+        boolean lg;
+
+        if(boolIn.compareTo("true") == 0)
+            lg = true;
+        else if(boolIn.compareTo("false") == 0)
+            lg = false;
+        else
+            lg = true;
+
+        try (DbFacade db = new DbFacade()) {
+            ResultSet rset = db.selectReviewByCommentLength(Integer.parseInt(commentLength), lg);
+            ArrayList<Map<String, String>> reviews = new ArrayList<>();
+            while (rset.next()) {
+                Map<String, String> row = new HashMap<>();
+                row.put("comments", rset.getString(1));
+                row.put("rating", rset.getString(2));
+                row.put("title", rset.getString(3));
+                row.put("dateTime", rset.getString(4));
+                row.put("reviewed", rset.getString(5));
+                row.put("isan_ID", rset.getString(6));
+                row.put("userID", rset.getString(7));
+                reviews.add(row);
+            }
+            Map<String, Object> data = new HashMap<>();
+            data.put("reviews", reviews);
+            return runner.renderTemplate(data, "adminDisplayReviews.hbs");
+        } catch (SQLException e) {
+            resp.status(500);
+            System.err.println("In adminReviewPost: " + e.getMessage());
+            return "";
+        }
+
+    }
+
 
 }

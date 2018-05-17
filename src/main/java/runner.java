@@ -51,6 +51,8 @@ public class runner {
         post("/admin/success-user-change", controller::promoteDemotePost);
         get("/admin/freezeUser", controller::adminDisplayFreezeUserForm);
         post("/admin/freezeUser/result", controller::adminFreezeUser);
+        get("/admin/searchReview", controller::adminListReviewsForm);
+        post("/admin/searchReview/result", controller::adminReviewPost);
 
 
             //db.addMovie("Animal House", "0000000000001", "Comedy", "R", "English", new Time(90 * 60 * 1000), 1978);
