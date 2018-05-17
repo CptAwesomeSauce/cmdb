@@ -1,0 +1,30 @@
+{{>header.hbs}}
+
+
+{{#reviews}}
+    <li>Old comment: {{comments}}</li>
+    <li>Old rating: {{rating}}</li>
+    <form action="/edit-success" method="post">
+        <input type="hidden"name="isanID_field" value = {{isan_ID}}>
+
+        <p>Edit your review:</p>
+        <label for="comments">Comments: <br></label>
+        <textarea rows="15" cols="50" name="new_comment" ></textarea> <br>
+
+        <p>Rating:
+            <br>
+            <input type="radio" name="new_rating" value="1"> 1★ <br>
+            <input type="radio" name="new_rating" value="2"> 2★★ <br>
+            <input type="radio" name="new_rating" value="3"> 3★★★ <br>
+            <input type="radio" name="new_rating" value="4"> 4★★★★ <br>
+            <input type="radio" name="new_rating" value="5"> 5★★★★★ <br>
+
+        </p>
+
+        <p><button type="submit">Submit Review</button></p>
+
+    </form>
+    <br>
+{{/reviews}}
+
+{{>footer.hbs}}
