@@ -58,6 +58,8 @@ public class runner {
         get("/admin/searchReview", controller::adminListReviewsForm);
         post("/admin/searchReview/result", controller::adminReviewPost);
 
+        get("/way-home", controller::goHome);
+
 
             //db.addMovie("Animal House", "0000000000001", "Comedy", "R", "English", new Time(90 * 60 * 1000), 1978);
         before("/admin/*", controller::adminBeforeFilter);

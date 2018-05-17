@@ -9,8 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-//commit test 2
+import java.util.NoSuchElementException;
 
 import static spark.Spark.halt;
 
@@ -180,8 +179,6 @@ public class ProjectController {
         }
     }
 
-
-
     public Object getMovieListGenre(Request req, Response resp) {
         String genreIn = req.queryParams("genre_field");
 
@@ -321,7 +318,6 @@ public class ProjectController {
         return runner.renderTemplate(data, "modReviewPage.hbs");
 
     }
-
 
     public Object getUserReviews(Request req, Response resp){
         try(DbFacade db = new DbFacade()){
@@ -512,7 +508,6 @@ public class ProjectController {
         return runner.renderTemplate(null, "homepage.hbs");
     }
 
-
     public Object displayMyReviews(Request req, Response resp){
         String type = Integer.toString(req.session().attribute("type"));
         if(type.equals("2")){
@@ -607,6 +602,24 @@ public class ProjectController {
 
     }
 
+    public Object goHome(Request req, Response resp){
+        try {
+            String type = Integer.toString(req.session().attribute("type"));
+
+            if (type.equals("1"))
+
+                return runner.renderTemplate(null, "user-go-home.hbs");
+            else if (type.equals("2"))
+                return runner.renderTemplate(null, "mod-go-home.hbs");
+            else if (type.equals("3"))
+                return runner.renderTemplate(null, "admin-go-home.hbs");
+            else
+                return runner.renderTemplate(null, "you-go-home.hbs");
+        } catch (NullPointerException e) {
+            return runner.renderTemplate(null, "you-go-home.hbs");
+        }
+    }
+
     public Object adminListReviewsForm(Request req, Response resp){
         return runner.renderTemplate(null, "adminReviewCheckForm.hbs");
     }
@@ -647,6 +660,5 @@ public class ProjectController {
         }
 
     }
-
 
 }
