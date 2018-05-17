@@ -15,6 +15,15 @@
 
         <p><button type="submit">Delete Review</button></p>
 
+
+
+    </form>
+
+    <form action="/edit-review" method="Post">
+        <input type="hidden" name="isanID_field" value = {{isan_ID}}>
+        <input type="hidden"name="ID_field" value = {{userID}}>
+        <p><button type="submit">Edit Review</button></p>
+
     </form>
     <br>
 {{/reviews}}

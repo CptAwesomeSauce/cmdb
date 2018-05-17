@@ -33,7 +33,7 @@ public class ProjectController {
     public Object getReview(Request req, Response resp){ return runner.renderTemplate(null, "writeReviewForm.hbs"); }
 
     public Object editMyReview(Request req, Response resp){
-        String userID = req.session().attribute("username");
+        String userID = req.queryParams("ID_field");
         String mID = req.queryParams("isanID_field");
         try (DbFacade db = new DbFacade()) {
             ResultSet rset = db.getMyOneReviews(userID, mID);
@@ -46,6 +46,7 @@ public class ProjectController {
                 row.put("dateTime", rset.getString(4));
                 row.put("reviewed", rset.getString(5));
                 row.put("isan_ID", rset.getString(6));
+                row.put("userID", rset.getString(7));
                 reviews.add(row);
             }
             Map <String, Object> data = new HashMap <>();
@@ -477,12 +478,12 @@ public class ProjectController {
 
     public Object postEditSuccess(Request req, Response resp){
 
-        String IDIn = req.session().attribute("username");
-
+        //String IDIn = req.session().attribute("username");
+        String IDIn = req.queryParams("userID_field");
         String type = Integer.toString(req.session().attribute("type"));
-        if (type.equals("2")) {
-            IDIn = req.queryParams("ID_field");
-        }
+//        if (type.equals("2")) {
+//            IDIn = req.queryParams("ID_field");
+//        }
 
         String isanIN = req.queryParams("isanID_field");
 

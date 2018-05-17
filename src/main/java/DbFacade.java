@@ -438,7 +438,8 @@ public class DbFacade implements AutoCloseable {
     }
 
     public ResultSet getMyOneReviews(String uID, String mID) throws SQLException{
-        String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, review.reviewed, movie.ISAN_ID " +
+        String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, review.reviewed, " +
+                "movie.ISAN_ID, review.User_ID " +
                 "FROM review, movie " +
                 "WHERE User_ID = ? AND review.isanID = ? AND review.isanID = movie.ISAN_ID";
         PreparedStatement pstmt = conn.prepareStatement(sql);
