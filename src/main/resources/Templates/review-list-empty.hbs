@@ -1,0 +1,13 @@
+{{>header.hbs}}
+
+<h2>Sorry, there are no reviews for this movie</h2>
+
+<ul>
+    {{#movie}}
+        <ul>
+            <a href="/write-review/{{ISAN_ID}}">Be the first to write a review for this movie</a>
+        </ul>
+    {{/movie}}
+</ul>
+
+{{>footer.hbs}}

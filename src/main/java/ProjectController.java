@@ -3,11 +3,14 @@ import spark.Request;
 import spark.Response;
 import spark.Session;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+//commit test 2
 
 import static spark.Spark.halt;
 
@@ -29,6 +32,32 @@ public class ProjectController {
 
     public Object getReview(Request req, Response resp){ return runner.renderTemplate(null, "writeReviewForm.hbs"); }
 
+    public Object editMyReview(Request req, Response resp){
+        String userID = req.session().attribute("username");
+        String mID = req.queryParams("isanID_field");
+        try (DbFacade db = new DbFacade()) {
+            ResultSet rset = db.getMyOneReviews(userID, mID);
+            ArrayList <Map <String, String>> reviews = new ArrayList <>();
+            while (rset.next()) {
+                Map <String, String> row = new HashMap <>();
+                row.put("comments", rset.getString(1));
+                row.put("rating", rset.getString(2));
+                row.put("title", rset.getString(3));
+                row.put("dateTime", rset.getString(4));
+                row.put("reviewed", rset.getString(5));
+                row.put("isan_ID", rset.getString(6));
+                reviews.add(row);
+            }
+            Map <String, Object> data = new HashMap <>();
+            data.put("reviews", reviews);
+            return runner.renderTemplate(data, "editReviewForm.hbs");
+        } catch (SQLException e) {
+            resp.status(500);
+            System.err.println("Couldn't find your reviews: " + e.getMessage());
+            return "";
+        }
+    }
+
     public Object getMovieList(Request req, Response resp) {
         String title = req.queryParams("title_field");
         try(DbFacade db = new DbFacade()) {
@@ -39,6 +68,9 @@ public class ProjectController {
                 row.put("title", rset.getString(1));
                 row.put("ISAN_ID", rset.getString(2));
                 movies.add(row);
+            }
+            if (movies.isEmpty()) {
+                return runner.renderTemplate(null,"movie-list-empty.hbs");
             }
             Map<String,Object> data = new HashMap<>();
             data.put("movies",movies);
@@ -146,6 +178,8 @@ public class ProjectController {
             return runner.renderTemplate(data, "homepage.hbs");
         }
     }
+
+
 
     public Object getMovieListGenre(Request req, Response resp) {
         String genreIn = req.queryParams("genre_field");
@@ -299,6 +333,9 @@ public class ProjectController {
                 row.put("comments", rset.getString(1));
                 reviews.add(row);
             }
+            if (reviews.isEmpty()) {
+                return runner.renderTemplate(null,"review-list-empty.hbs");
+            }
             Map<String,Object> data = new HashMap<>();
             data.put("reviews",reviews);
             return runner.renderTemplate(data,"review-list-partial.hbs");
@@ -438,6 +475,43 @@ public class ProjectController {
 
     }
 
+    public Object postEditSuccess(Request req, Response resp){
+
+        String IDIn = req.session().attribute("username");
+
+        String type = Integer.toString(req.session().attribute("type"));
+        if (type.equals("2")) {
+            IDIn = req.queryParams("ID_field");
+        }
+
+        String isanIN = req.queryParams("isanID_field");
+
+        String ratingIn = req.queryParams("new_rating");
+        String commentsIn = req.queryParams("new_comment");
+
+        try (DbFacade db = new DbFacade()) {
+            boolean edited = db.editReview(IDIn, isanIN, ratingIn, commentsIn);
+
+            if (edited) {
+                if (type.equals("1"))
+                    return runner.renderTemplate(null, "suc-edit-user.hbs");
+                else if (type.equals("2"))
+                    return runner.renderTemplate(null, "suc-edit-mod.hbs");
+                else if (type.equals("3"))
+                    return runner.renderTemplate(null, "suc-edit-admin.hbs");
+                else
+                    return runner.renderTemplate(null, "homepage.hbs");
+            }
+
+        } catch (SQLException e) {
+            resp.status(500);
+            System.err.println("Couldn't edit review: " + e.getMessage());
+            return runner.renderTemplate(null, "homepage.hbs");
+        }
+        return runner.renderTemplate(null, "homepage.hbs");
+    }
+
+
     public Object displayMyReviews(Request req, Response resp){
         String type = Integer.toString(req.session().attribute("type"));
         if(type.equals("2")){
@@ -454,6 +528,9 @@ public class ProjectController {
                     row.put("isan_ID", rset.getString(6));
                     row.put("userID", rset.getString(7));
                     reviews.add(row);
+                }
+                if (reviews.isEmpty()) {
+                    return runner.renderTemplate(null,"my-review-list-empty.hbs");
                 }
                 Map<String, Object> data = new HashMap<>();
                 data.put("reviews", reviews);
@@ -481,6 +558,9 @@ public class ProjectController {
                 row.put("isan_ID", rset.getString(6));
                 row.put("userID", userID);
                 reviews.add(row);
+            }
+            if (reviews.isEmpty()) {
+                return runner.renderTemplate(null,"my-review-list-empty.hbs");
             }
             Map<String, Object> data = new HashMap<>();
             data.put("reviews", reviews);

@@ -19,6 +19,8 @@ public class runner {
         get("/homepage", controller::displayHome);
 
         get("/viewReviews", controller::displayMyReviews);
+        post("/edit-review", controller::editMyReview);
+        post("/edit-success", controller::postEditSuccess);
         post("/viewReviews/delSuccess", controller::deleteMyReview);
 
         post( "/authenticate", controller::postLoginForm);

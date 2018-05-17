@@ -357,6 +357,28 @@ public class DbFacade implements AutoCloseable {
 
     }
 
+    public Boolean editReview(String uID, String isan, String newrating, String newcomment) throws SQLException{
+        String sql = null;
+        ResultSet rset = null;
+
+        Date date = new Date();
+        Object time = new Timestamp(date.getTime());
+
+            sql = "UPDATE review " +
+                    "SET rating = ? , comments = ? , dateTime = ? " +
+                    "WHERE User_ID = ? AND isanID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.clearParameters();
+            pstmt.setString(1, newrating);
+            pstmt.setString(2, newcomment);
+            pstmt.setObject(3, time);
+            pstmt.setString(4, uID);
+            pstmt.setString(5, isan);
+            if(pstmt.executeUpdate() > 0)
+                return true;
+            return false;
+            }
+
     public Boolean deleteReview(String uID, String isan, int status) throws SQLException{
         String sql = null;
         ResultSet rset = null;
@@ -415,6 +437,17 @@ public class DbFacade implements AutoCloseable {
         return pstmt.executeQuery();
     }
 
+    public ResultSet getMyOneReviews(String uID, String mID) throws SQLException{
+        String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, review.reviewed, movie.ISAN_ID " +
+                "FROM review, movie " +
+                "WHERE User_ID = ? AND review.isanID = ? AND review.isanID = movie.ISAN_ID";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, uID);
+        pstmt.setString(2, mID);
+        return pstmt.executeQuery();
+    }
+
     public ResultSet getAllReviews() throws  SQLException{
         String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, review.reviewed, movie.ISAN_ID, review.User_ID " +
                 "FROM review, movie " +
@@ -423,6 +456,4 @@ public class DbFacade implements AutoCloseable {
         pstmt.clearParameters();
         return pstmt.executeQuery();
     }
-
-
 }
