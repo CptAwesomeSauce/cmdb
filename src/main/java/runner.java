@@ -51,6 +51,8 @@ public class runner {
         post("/admin/success-user-change", controller::promoteDemotePost);
         get("/admin/freezeUser", controller::adminDisplayFreezeUserForm);
         post("/admin/freezeUser/result", controller::adminFreezeUser);
+        get("/admin/searchReview", controller::adminListReviewsForm);
+        post("/admin/searchReview/result", controller::adminReviewPost);
 
         get("/way-home", controller::goHome);
 

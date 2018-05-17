@@ -2,11 +2,13 @@
 
 
 {{#reviews}}
+    <li>Movie: {{title}}</li>
     <li>Old comment: {{comments}}</li>
     <li>Old rating: {{rating}}</li>
+
     <form action="/edit-success" method="post">
         <input type="hidden"name="isanID_field" value = {{isan_ID}}>
-
+        <input type="hidden"name="userID_field" value = {{userID}}>
         <p>Edit your review:</p>
         <label for="comments">Comments: <br></label>
         <textarea rows="15" cols="50" name="new_comment" ></textarea> <br>
