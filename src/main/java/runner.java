@@ -52,6 +52,8 @@ public class runner {
         get("/admin/freezeUser", controller::adminDisplayFreezeUserForm);
         post("/admin/freezeUser/result", controller::adminFreezeUser);
 
+        get("/way-home", controller::goHome);
+
 
             //db.addMovie("Animal House", "0000000000001", "Comedy", "R", "English", new Time(90 * 60 * 1000), 1978);
         before("/admin/*", controller::adminBeforeFilter);
