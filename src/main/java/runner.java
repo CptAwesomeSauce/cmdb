@@ -51,6 +51,10 @@ public class runner {
         post("/admin/success-user-change", controller::promoteDemotePost);
         get("/admin/freezeUser", controller::adminDisplayFreezeUserForm);
         post("/admin/freezeUser/result", controller::adminFreezeUser);
+        //This admin feature will only DISPLAY the results of the search.
+        //The idea is that admins don't want to waste their time editing or
+        //deleting reviews. So they could specify which reviews to delete
+        //to a moderator.
         get("/admin/searchReview", controller::adminListReviewsForm);
         post("/admin/searchReview/result", controller::adminReviewPost);
 

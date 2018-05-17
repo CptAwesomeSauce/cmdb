@@ -188,12 +188,12 @@ public class DbFacade implements AutoCloseable {
                 sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, " +
                         "review.reviewed, movie.ISAN_ID, review.User_ID" +
                         " FROM review, movie " +
-                        "WHERE LENGTH(review.comments) <= ?";
+                        "WHERE movie.ISAN_ID = review.isanID AND LENGTH(review.comments) <= ?";
             }else {
                 sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, " +
                         "review.reviewed, movie.ISAN_ID, review.User_ID" +
                         " FROM review, movie " +
-                        "WHERE LENGTH(review.comments) >= ?";
+                        "WHERE movie.ISAN_ID = review.isanID AND LENGTH(review.comments) >= ?";
             }
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.clearParameters();

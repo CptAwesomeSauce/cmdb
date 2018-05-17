@@ -639,7 +639,7 @@ public class ProjectController {
             }
             Map<String, Object> data = new HashMap<>();
             data.put("reviews", reviews);
-            return runner.renderTemplate(data, "adminDisplayReviews.hbs");
+            return runner.renderTemplate(data,"adminDisplayReviews.hbs");
         } catch (SQLException e) {
             resp.status(500);
             System.err.println("In adminReviewPost: " + e.getMessage());
