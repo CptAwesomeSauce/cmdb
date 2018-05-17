@@ -179,8 +179,6 @@ public class ProjectController {
         }
     }
 
-
-
     public Object getMovieListGenre(Request req, Response resp) {
         String genreIn = req.queryParams("genre_field");
 
@@ -604,8 +602,8 @@ public class ProjectController {
 
     }
 
-    public Object goHome(Request req, Response resp) {
-        try{
+    public Object goHome(Request req, Response resp){
+        try {
             String type = Integer.toString(req.session().attribute("type"));
 
             if (type.equals("1"))
@@ -617,9 +615,11 @@ public class ProjectController {
                 return runner.renderTemplate(null, "admin-go-home.hbs");
             else
                 return runner.renderTemplate(null, "you-go-home.hbs");
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return runner.renderTemplate(null, "you-go-home.hbs");
         }
+    }
+
     public Object adminListReviewsForm(Request req, Response resp){
         return runner.renderTemplate(null, "adminReviewCheckForm.hbs");
     }
@@ -658,9 +658,6 @@ public class ProjectController {
             System.err.println("In adminReviewPost: " + e.getMessage());
             return "";
         }
-
-    }
-
 
     }
 
