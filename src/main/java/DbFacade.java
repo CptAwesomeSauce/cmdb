@@ -22,8 +22,8 @@ public class DbFacade implements AutoCloseable {
 
     private void openDB() throws SQLException {
         // Connect to the database
-        String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
-        //String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
+        //String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
+        String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
         String username = "yellow_2018";
         String password = "367rocks!";
 
@@ -98,15 +98,16 @@ public class DbFacade implements AutoCloseable {
     public boolean addUser(String fname, String lname, String userID,
                          String uPass, int type, int blocked) {
         try {
-            String sql = "INSERT INTO user VALUES (?,?,?,?,?,?);";
+            String sql = "INSERT INTO user VALUES (?,?,?,?,?,?,SHA2(?,256));";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.clearParameters();
             pstmt.setString(1, fname);
             pstmt.setString(2, lname);
             pstmt.setString(3, userID);
-            pstmt.setString(4, uPass);
+            pstmt.setString(4, "no longer used");
             pstmt.setInt(5, type);
             pstmt.setInt(6, blocked);
+            pstmt.setString(7, uPass);
             int count = pstmt.executeUpdate();
             if(count > 0)
                 return true;
@@ -219,7 +220,8 @@ public class DbFacade implements AutoCloseable {
     public int authenticateUser( String username, String password ) throws SQLException {
         String sql = "SELECT user_type FROM user WHERE " +
                 " user_ID = ? AND " +
-                " password = ?";
+                " password_hash = SHA2(?,256) AND " +
+                "blocked = 0";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.clearParameters();
         pstmt.setString(1, username);
@@ -254,16 +256,17 @@ public class DbFacade implements AutoCloseable {
     }
 
     public Boolean createNewUser(String fname, String lname, String id, String pwd)throws SQLException{
-        String sql = "INSERT INTO user (fname,lname,user_ID,password,user_type,blocked)" +
-                "VALUES(?,?,?,?,?,?)";
+        String sql = "INSERT INTO user (fname,lname,user_ID,password,user_type,blocked,password_hash)" +
+                "VALUES(?,?,?,?,?,?,SHA2(?,256))";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.clearParameters();
         pstmt.setString(1, fname);
         pstmt.setString(2, lname);
         pstmt.setString(3, id);
-        pstmt.setString(4, pwd);
+        pstmt.setString(4, "not used");
         pstmt.setString(5, "1");
         pstmt.setString(6, "0");
+        pstmt.setString(7, pwd);
 
         ResultSet rset = pstmt.executeQuery();
         
