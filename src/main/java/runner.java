@@ -36,7 +36,7 @@ public class runner {
         get("/movie-by-genre", controller::getMovieListGenre);
 
         get("/movie-info/:ISN", controller::getMovies);
-        get("/newuser", controller::createNewUser);
+        post("/newuser", controller::createNewUser);
         post("new-user-form", controller::getNewUserForm);
         get("/user/userhome", controller::getUserHome);
 

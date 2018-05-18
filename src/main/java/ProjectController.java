@@ -107,7 +107,6 @@ public class ProjectController {
                 data.put("errorMsg", "Login failed!");
                 return runner.renderTemplate(data, "homepage.hbs");
             }
-
         } catch (SQLException e) {
             Map<String, Object> data = new HashMap<>();
             data.put("errorMsg", "Login failed!");
