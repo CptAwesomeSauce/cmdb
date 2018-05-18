@@ -173,16 +173,22 @@ public class ProjectController {
                 }
                 Map<String, Object> data = new HashMap<>();
                 data.put("msg", "success");
-                return runner.renderTemplate(data, "homepage.hbs");
+                Session sess = req.session();
+                sess.attribute("username", uID);
+                sess.attribute("auth", true);
+                sess.attribute("type", 1);
+                return runner.renderTemplate(data, "suc-new-user.hbs");
             } catch (SQLException ex) {
                 Map<String, Object> data = new HashMap<>();
                 data.put("msg", "Create failed!");
-                return runner.renderTemplate(data, "homepage.hbs");
+                System.err.println("createNewUser, failed:" + ex.getMessage());
+                return runner.renderTemplate(data, "new-user-form.hbs");
             }
         } else {
             Map<String, Object> data = new HashMap<>();
             data.put("msg", "password do not match!");
-            return runner.renderTemplate(data, "homepage.hbs");
+            System.err.println("createNewUser, pw match failed");
+            return runner.renderTemplate(data, "new-user-form.hbs");
         }
     }
 
