@@ -695,10 +695,9 @@ public class ProjectController {
             String hours = lengthIn.substring(0, first);
             String minutes = lengthIn.substring(first + 1, second);
             String seconds = lengthIn.substring(second + 1);
-            System.out.println(hours + " " + minutes + " " + seconds);
 
             //create a new time object from our string.
-        java.sql.Time timeValue = new java.sql.Time(Integer.parseInt(hours), Integer.parseInt(minutes),
+            java.sql.Time timeValue = new java.sql.Time(Integer.parseInt(hours), Integer.parseInt(minutes),
                 Integer.parseInt(seconds) );
 
         try(DbFacade db = new DbFacade()){

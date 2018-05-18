@@ -8,7 +8,9 @@ import java.util.Map;
 import static spark.Spark.*;
 
 /**
- * Created by stopp on 4/24/2018.
+ * Team Yellow Movie Review Website
+ * 367 Spring Semester
+ * Sam Driver, David S., David M., Steven Lopez, Jasmine Julian
  */
 public class runner {
     public static void main(String[] args) throws SQLException {
