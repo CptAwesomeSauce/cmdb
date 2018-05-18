@@ -387,6 +387,7 @@ public class ProjectController {
                 return runner.renderTemplate(data, "movie-infoN.hbs");
             }
         } catch(SQLException e) {
+
             resp.status(500);
             System.err.println("postLoginForm: " + e.getMessage());
             return "";
