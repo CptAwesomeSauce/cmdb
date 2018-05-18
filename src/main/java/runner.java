@@ -45,6 +45,8 @@ public class runner {
         post("/mod/review-check/update", controller::approveReview);
         get("/mod/freezeUser", controller::displayFreezeUserForm);
         post("/mod/freezeUser/result", controller::modFreezeUser);
+        get("mod/addMovie", controller::modAddMovieForm);
+        post("/mod/addMovie/success", controller::modAddMovieSuc);
 
         get("/admin/adminhome", controller::getAdminHome);
         get("/admin/promote-user", controller::promoteDemoteForm);

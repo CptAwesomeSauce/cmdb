@@ -181,6 +181,7 @@ public class ProjectController {
 
     public Object getMovieListGenre(Request req, Response resp) {
         String genreIn = req.queryParams("genre_field");
+        String isan = "";
 
         try (DbFacade db = new DbFacade()) {
             ResultSet rset = db.searchByGenre(genreIn);
@@ -657,6 +658,54 @@ public class ProjectController {
             resp.status(500);
             System.err.println("In adminReviewPost: " + e.getMessage());
             return "";
+        }
+
+    }
+
+    public Object modAddMovieForm(Request req, Response resp){
+        return runner.renderTemplate(null, "mod-AddMovieForm.hbs");
+    }
+
+    public Object modAddMovieSuc(Request req, Response resp){
+        String titleIn = req.queryParams("title_field");
+        String isanIn = req.queryParams("isan_field");
+        String genreIn = req.queryParams("genre_field");
+        String mpaaIn = req.queryParams("mpaa_field");
+        String lengthIn = req.queryParams("length_field");
+        String dateIn = req.queryParams("date_field");
+
+        try {
+            int first = lengthIn.indexOf(':');
+            int second = lengthIn.indexOf(':', first + 1);
+            String hours = lengthIn.substring(0, first);
+            String minutes = lengthIn.substring(first + 1, second);
+            String seconds = lengthIn.substring(second + 1);
+            System.out.println(hours + " " + minutes + " " + seconds);
+
+            //create a new time object from our string.
+        java.sql.Time timeValue = new java.sql.Time(Integer.parseInt(hours), Integer.parseInt(minutes),
+                Integer.parseInt(seconds) );
+
+        try(DbFacade db = new DbFacade()){
+            boolean added;
+            added = db.addMovie(titleIn, isanIn, genreIn, mpaaIn, lengthIn,timeValue, Integer.parseInt(dateIn));
+
+            if(added)
+                return runner.renderTemplate(null, "suc-mod-addMovie.hbs");
+
+        }catch (SQLException e){
+            resp.status(500);
+            System.err.println("In modAddMovieSuc: " + e.getMessage());
+            return "";
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("errorMsg", "Add movie failed!");
+        return runner.renderTemplate(data, "mod-AddMovieForm.hbs");
+
+        }catch (StringIndexOutOfBoundsException e){
+            Map<String, Object> data = new HashMap<>();
+            data.put("errorMsg", "Add movie failed! Input a proper Length");
+            return runner.renderTemplate(data, "mod-AddMovieForm.hbs");
         }
 
     }

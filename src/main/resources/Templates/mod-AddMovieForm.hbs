@@ -1,0 +1,32 @@
+{{>header.hbs}}
+
+<form action="/mod/addMovie/success" method="post">
+
+    {{#errorMsg}}
+        <p style="font-weight: bold; color: red;">{{errorMsg}}</p>
+    {{/errorMsg}}
+
+    <h2>Add a Movie</h2>
+    <label for="title">Title:</label>
+    <input type="text" id ="title" name="title_field"> <br>
+
+    <label for="isan">ISAN:</label>
+    <input type="text" id ="isan" name="isan_field"> <br>
+
+    <label for="genre">Genre(s) (Format: Horror|Action|Thriller):</label>
+    <input type="text" id ="genre" name="genre_field"> <br>
+
+    <label for="mpaa">MPAA Rating (G - PG - PG 13 - R):</label>
+    <input type="text" id ="mpaa" name="mpaa_field"> <br>
+
+    <label for="length">Length (Format: HH:MM:SS):</label>
+    <input type="text" id ="length" name="length_field"> <br>
+
+    <label for="year">Year Released:</label>
+    <input type="text" id ="year" name="date_field"> <br>
+
+
+    <p><button type="submit">Add Movie</button></p>
+</form>
+
+{{>footer.hbs}}

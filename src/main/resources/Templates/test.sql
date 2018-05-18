@@ -1,5 +1,6 @@
 SELECT * FROM review;
 SELECT * FROM user;
+SELECT * FROM movie WHERE title = 'Databases';
 
 SELECT COUNT(*)
 FROM movie_user
