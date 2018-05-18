@@ -685,6 +685,7 @@ public class ProjectController {
         String isanIn = req.queryParams("isan_field");
         String genreIn = req.queryParams("genre_field");
         String mpaaIn = req.queryParams("mpaa_field");
+        String lang = req.queryParams("lang_field");
         String lengthIn = req.queryParams("length_field");
         String dateIn = req.queryParams("date_field");
 
@@ -702,7 +703,7 @@ public class ProjectController {
 
         try(DbFacade db = new DbFacade()){
             boolean added;
-            added = db.addMovie(titleIn, isanIn, genreIn, mpaaIn, lengthIn,timeValue, Integer.parseInt(dateIn));
+            added = db.addMovie(titleIn, isanIn, genreIn, mpaaIn, lang, timeValue, Integer.parseInt(dateIn));
 
             if(added)
                 return runner.renderTemplate(null, "suc-mod-addMovie.hbs");

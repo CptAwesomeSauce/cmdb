@@ -409,8 +409,8 @@ public class DbFacade implements AutoCloseable {
 
     public Boolean deleteUser(String uID, int delPriv) throws SQLException{
         String sql = null;
-        ResultSet rset = null;
-        sql = "DELETE FROM user " +
+        sql = "Update user " +
+                "SET blocked = 1 " +
                 "WHERE user_ID = ? AND user_type = ? ";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);

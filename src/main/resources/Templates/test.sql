@@ -1,8 +1,10 @@
 SELECT * FROM review;
 SELECT * FROM user;
-SELECT * FROM movie WHERE title = 'Databases';
+SELECT * FROM movie WHERE title = 'Up';
 SELECT * FROM movie_user;
 
+DELETE FROM movie
+WHERE title = 'Up' AND genre = 'Adventure';
 
 SELECT COUNT(*)
 FROM movie_user
