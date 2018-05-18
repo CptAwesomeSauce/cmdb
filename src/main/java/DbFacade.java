@@ -22,8 +22,8 @@ public class DbFacade implements AutoCloseable {
 
     private void openDB() throws SQLException {
         // Connect to the database
-        //String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
-        String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
+        String url = "jdbc:mariadb://mal.cs.plu.edu:3306/367_2018_yellow";
+        //String url = "jdbc:mysql://127.0.0.1:2000/367_2018_yellow";
         String username = "yellow_2018";
         String password = "367rocks!";
 
@@ -423,10 +423,10 @@ public class DbFacade implements AutoCloseable {
         return false;
     }
 
-    public Boolean adminDeleteUser(String uID) throws SQLException{
+    public Boolean adminBanUser(String uID) throws SQLException{
         String sql = null;
-        ResultSet rset = null;
-        sql = "DELETE FROM user " +
+        sql = "Update user " +
+                "SET blocked = 1 " +
                 "WHERE user_ID = ? ";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -488,5 +488,25 @@ public class DbFacade implements AutoCloseable {
             return false;
         }
 
+    }
+
+    public int checkBlocked(String uID) throws SQLException{
+        String sql = "SELECT blocked " +
+                "FROM user " +
+                "WHERE user_ID = ? ";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, uID);
+        ResultSet rset = pstmt.executeQuery();
+        try {
+            rset.next();
+            return Integer.parseInt(rset.getString(1));
+        }catch(NumberFormatException ex){
+            System.err.println("dbfacade: " + ex.getMessage());
+            return 0;
+        }catch (NullPointerException np){
+            System.err.println("dbfacade: " + np.getMessage());
+            return 0;
+        }
     }
 }
