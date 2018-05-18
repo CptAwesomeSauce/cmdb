@@ -181,7 +181,6 @@ public class ProjectController {
 
     public Object getMovieListGenre(Request req, Response resp) {
         String genreIn = req.queryParams("genre_field");
-        String isan = "";
 
         try (DbFacade db = new DbFacade()) {
             ResultSet rset = db.searchByGenre(genreIn);
@@ -357,6 +356,7 @@ public class ProjectController {
                 row.put("language", rset.getString(5));
                 row.put("length", rset.getString(6));
                 row.put("date", rset.getString(7));
+                row.put("views", rset.getString(8));
                 movies.add(row);
             }
 
@@ -364,6 +364,7 @@ public class ProjectController {
             data.put("movie", movies);
             try {
                 if (req.session().attribute("auth").equals(true)) {
+                    db.addView(req.session().attribute("username") ,req.params(":ISN"));
                     return runner.renderTemplate(data, "movie-infoU.hbs");
                 } else {
                     return runner.renderTemplate(data, "movie-infoN.hbs");

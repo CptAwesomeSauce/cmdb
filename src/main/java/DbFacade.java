@@ -47,9 +47,9 @@ public class DbFacade implements AutoCloseable {
 
     //get info about a movie
     public ResultSet getMovieInfo(String ISAN) throws SQLException {
-        String sql="SELECT title, ISAN_ID, genre, MPAA_Rating, language, length, date " +
-                "FROM movie " +
-                "WHERE ISAN_ID = ?";
+        String sql="SELECT title, movie.ISAN_ID, genre, MPAA_Rating, language, length, date, COUNT(DISTINCT(movie_user.User_ID)) " +
+                "FROM movie, movie_user " +
+                "WHERE movie.ISAN_ID = movie_user.ISAN_ID AND movie.ISAN_ID = ? ";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.clearParameters();
         pstmt.setString(1, ISAN);
@@ -144,13 +144,14 @@ public class DbFacade implements AutoCloseable {
     }
 
     //counts the users who have accessed a movie
-    public ResultSet countViews(String isanID) {
+    public ResultSet countViews(String isanID, String uID) {
         ResultSet r = null;
         try {
-            String sql =   "SELECT COUNT(*) FROM movie_user WHERE ISAN_ID = ? ";
+            String sql = "SELECT COUNT(DISTINCT(User_ID)) FROM movie_user WHERE ISAN_ID = ? AND User_ID = ? ";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.clearParameters();
             pstmt.setString(1, isanID);
+            pstmt.setString(2, uID);
             r = pstmt.executeQuery();
         } catch (SQLException e) {
             System.out.println("Report Views failed: " + e.getMessage());
@@ -351,7 +352,7 @@ public class DbFacade implements AutoCloseable {
         ResultSet rset = null;
         sql = "UPDATE review " +
                 "SET reviewed = ? " +
-                "WHERE User_ID = ? AND isanID = ?";
+                "WHERE User_ID = ? AND isanID = ? ";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.clearParameters();
         pstmt.setInt(1, status);
@@ -437,7 +438,7 @@ public class DbFacade implements AutoCloseable {
     public ResultSet getMyReviews(String uID) throws SQLException{
         String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, review.reviewed, movie.ISAN_ID " +
                 "FROM review, movie " +
-                "WHERE User_ID = ? AND review.isanID = movie.ISAN_ID";
+                "WHERE User_ID = ? AND review.isanID = movie.ISAN_ID ";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.clearParameters();
         pstmt.setString(1, uID);
@@ -457,11 +458,32 @@ public class DbFacade implements AutoCloseable {
     }
 
     public ResultSet getAllReviews() throws  SQLException{
-        String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, review.reviewed, movie.ISAN_ID, review.User_ID " +
+        String sql = "SELECT review.comments, review.rating, movie.title, review.dateTime, " +
+                "review.reviewed, movie.ISAN_ID, review.User_ID " +
                 "FROM review, movie " +
-                "WHERE review.isanID = movie.ISAN_ID";
+                "WHERE review.isanID = movie.ISAN_ID ";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.clearParameters();
         return pstmt.executeQuery();
+    }
+
+    public Boolean addView(String uID, String isan){
+        try {
+
+            String sql = "INSERT INTO movie_user (ISAN_ID, USER_ID) " +
+                    "VALUES(?, ?) ";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.clearParameters();
+            pstmt.setObject(1, isan);
+            pstmt.setString(2, uID);
+            int count = pstmt.executeUpdate();
+            if (count > 0)
+                return true;
+            else
+                return false;
+        }catch (SQLException e){
+            return false;
+        }
+
     }
 }
