@@ -420,10 +420,10 @@ public class DbFacade implements AutoCloseable {
         return false;
     }
 
-    public Boolean adminDeleteUser(String uID) throws SQLException{
+    public Boolean adminBanUser(String uID) throws SQLException{
         String sql = null;
-        ResultSet rset = null;
-        sql = "DELETE FROM user " +
+        sql = "Update user " +
+                "SET blocked = 1 " +
                 "WHERE user_ID = ? ";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -485,5 +485,25 @@ public class DbFacade implements AutoCloseable {
             return false;
         }
 
+    }
+
+    public int checkBlocked(String uID) throws SQLException{
+        String sql = "SELECT blocked " +
+                "FROM user " +
+                "WHERE user_ID = ? ";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.clearParameters();
+        pstmt.setString(1, username);
+        ResultSet rset = pstmt.executeQuery();
+        try {
+            rset.next();
+            return Integer.parseInt(rset.getString(1));
+        }catch(NumberFormatException ex){
+            System.err.println("dbfacade: " + ex.getMessage());
+            return 0;
+        }catch (NullPointerException np){
+            System.err.println("dbfacade: " + np.getMessage());
+            return 0;
+        }
     }
 }

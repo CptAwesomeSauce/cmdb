@@ -86,6 +86,13 @@ public class ProjectController {
         String uname = req.queryParams("login_field");
         String pwd = req.queryParams("pword_field");
         try (DbFacade db = new DbFacade()) {
+            int banned = db.checkBlocked(uname);
+            if(banned == 1){
+                Map<String, Object> data = new HashMap<>();
+                data.put("errorMsg", "This account is locked!");
+                return runner.renderTemplate(data, "homepage.hbs");
+            }
+
             int result = db.authenticateUser(uname, pwd);
             Session sess = req.session();
             sess.attribute("username", uname);
@@ -416,17 +423,17 @@ public class ProjectController {
         String IDIn = req.queryParams("ID_field");
 
         try(DbFacade db = new DbFacade()){
-            Boolean deleted;
+            Boolean banned;
 
-            deleted = db.adminDeleteUser(IDIn);
+            banned = db.adminBanUser(IDIn);
             //This deleteUser method only takes ID because an admin can delete ANYONE
 
-            if(deleted)
+            if(banned)
                 return runner.renderTemplate(null, "adminDelSuc.hbs");
 
         }catch (SQLException e){
             resp.status(500);
-            System.err.println("Can't Delete: " + e.getMessage());
+            System.err.println("Can't Ban: " + e.getMessage());
             return "";
         }
         Map<String,Object> data = new HashMap<>();
